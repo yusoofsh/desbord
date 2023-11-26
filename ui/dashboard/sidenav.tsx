@@ -1,7 +1,7 @@
-import Link from 'next/link';
-import NavLinks from '@/ui/dashboard/nav-links';
-import AcmeLogo from '@/ui/acme-logo';
-import { PowerIcon } from '@heroicons/react/24/outline';
+import Link from "next/link";
+import NavLinks from "@/ui/dashboard/nav-links";
+import AcmeLogo from "@/ui/acme-logo";
+import { PowerIcon } from "@heroicons/react/24/outline";
 
 export default function SideNav() {
   return (

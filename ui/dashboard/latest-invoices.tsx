@@ -1,8 +1,8 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
-import Image from 'next/image';
-import { lusitana } from '@/ui/fonts';
-import { LatestInvoice } from '@/lib/definitions';
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
+import Image from "next/image";
+import { lusitana } from "@/ui/fonts";
+import { LatestInvoice } from "@/lib/definitions";
 export default async function LatestInvoices({
   latestInvoices,
 }: {

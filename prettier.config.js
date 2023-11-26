@@ -1,6 +1,8 @@
-const styleguide = require('@vercel/style-guide/prettier');
+const vercelPrettierOptions = require("@vercel/style-guide/prettier");
 
+/** @type {import('prettier').Options} */
 module.exports = {
-  ...styleguide,
-  plugins: [...styleguide.plugins, 'prettier-plugin-tailwindcss'],
+  ...vercelPrettierOptions, plugins: [...vercelPrettierOptions.plugins, "prettier-plugin-tailwindcss"],
+  // your options to override Vercel's options
+  singleQuote: false,
 };
