@@ -3567,7 +3567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:^8.0.3":
+"husky@npm:^8.0.0":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
   bin:
@@ -5805,7 +5805,7 @@ __metadata:
     eslint-config-prettier: "npm:9.0.0"
     eslint-import-resolver-typescript: "npm:^3.6.1"
     eslint-plugin-import: "npm:^2.29.0"
-    husky: "npm:^8.0.3"
+    husky: "npm:^8.0.0"
     lint-staged: "npm:^15.1.0"
     next: "npm:^14.0.2"
     postcss: "npm:8.4.31"
@@ -5817,6 +5817,9 @@ __metadata:
     tailwindcss: "npm:3.3.3"
     typescript: "npm:^5.3.2"
     zod: "npm:^3.22.2"
+  dependenciesMeta:
+    "@vercel/style-guide":
+      unplugged: true
   languageName: unknown
   linkType: soft
 

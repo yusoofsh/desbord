@@ -3,6 +3,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "postinstall": "husky install",
     "start": "next start"
   },
   "dependencies": {
@@ -39,16 +40,19 @@
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.0",
-    "husky": "^8.0.3",
+    "husky": "^8.0.0",
     "lint-staged": "^15.1.0",
     "postcss-load-config": "^4.0.2",
     "prettier": "^3.0.3",
     "sort-package-json": "^2.6.0",
     "typescript": "^5.3.2"
   },
+  "dependenciesMeta": {
+    "@vercel/style-guide": {
+      "unplugged": true
+    }
+  },
   "engines": {
     "node": ">=18.17.0"
-  },
-  "preferUnplugged": true,
-  "prepare": "husky install"
+  }
 }

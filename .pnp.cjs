@@ -1569,14 +1569,14 @@ const RAW_RUNTIME_STATE =
     ]],\
     ["@vercel/style-guide", [\
       ["npm:5.1.0", {\
-        "packageLocation": "../../../../../../.yarn/berry/cache/@vercel-style-guide-npm-5.1.0-d1c609670a-10c0.zip/node_modules/@vercel/style-guide/",\
+        "packageLocation": "./.yarn/unplugged/@vercel-style-guide-virtual-2ec6b63d32/node_modules/@vercel/style-guide/",\
         "packageDependencies": [\
           ["@vercel/style-guide", "npm:5.1.0"]\
         ],\
         "linkType": "SOFT"\
       }],\
       ["virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.1.0", {\
-        "packageLocation": "./.yarn/__virtual__/@vercel-style-guide-virtual-2ec6b63d32/7/.yarn/berry/cache/@vercel-style-guide-npm-5.1.0-d1c609670a-10c0.zip/node_modules/@vercel/style-guide/",\
+        "packageLocation": "./.yarn/unplugged/@vercel-style-guide-virtual-2ec6b63d32/node_modules/@vercel/style-guide/",\
         "packageDependencies": [\
           ["@vercel/style-guide", "virtual:dc3fc578bfa5e06182a4d2be39ede0bc5b74940b1ffe0d70c26892ab140a4699787750fba175dc306292e80b4aa2c8c5f68c2a821e69b2c37e360c0dff36ff66#npm:5.1.0"],\
           ["@babel/core", "npm:7.23.3"],\

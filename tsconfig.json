@@ -1,5 +1,5 @@
 {
-  "extends": "@vercel/style-guide/typescript",
+  "extends": "./.yarn/unplugged/@vercel-style-guide-virtual-2ec6b63d32/node_modules/@vercel/style-guide/typescript.json",
   "compilerOptions": {
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
