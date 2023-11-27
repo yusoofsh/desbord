@@ -1,0 +1,7 @@
+{
+  "name": "prettier",
+  "version": "3.1.0-sdk",
+  "type": "commonjs",
+  "main": "./index.cjs",
+  "bin": "./bin/prettier.cjs"
+}

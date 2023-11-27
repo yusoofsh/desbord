@@ -1,15 +1,10 @@
-import type { Config } from "tailwindcss";
-
-const config: Config = {
-  content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-  ],
+/** @type {import('tailwindcss').Config} */
+const tailwindConfig = {
+  content: ["app/**/*.{js,ts,jsx,tsx,mdx}", "ui/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
       gridTemplateColumns: {
-        "13": "repeat(13, minmax(0, 1fr))",
+        13: "repeat(13, minmax(0, 1fr))",
       },
       colors: {
         blue: {
@@ -29,4 +24,4 @@ const config: Config = {
   },
   plugins: [require("@tailwindcss/forms")],
 };
-export default config;
+module.exports = tailwindConfig;

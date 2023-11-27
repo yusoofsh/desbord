@@ -1,11 +1,14 @@
+/* eslint-disable no-console -- Console is useful for informational purposes */
+
 const { db } = require("@vercel/postgres");
+const bcrypt = require("bcrypt");
+
 const {
   invoices,
   customers,
   revenue,
   users,
-} = require("../lib/placeholder-data.js");
-const bcrypt = require("bcrypt");
+} = require("@/lib/placeholder-data.js");
 
 async function seedUsers(client) {
   try {
