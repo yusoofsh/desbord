@@ -3,39 +3,19 @@ const project = "tsconfig.json";
 /** @type {import('@types/eslint').Linter.Config} */
 const eslintConfig = {
   root: true,
-  extends: [
-    "@vercel/style-guide/eslint/browser",
-    "@vercel/style-guide/eslint/node",
-    "@vercel/style-guide/eslint/react",
-    "@vercel/style-guide/eslint/next",
-    "@vercel/style-guide/eslint/typescript",
-  ].map(require.resolve),
   parser: "@typescript-eslint/parser",
   parserOptions: { project },
-  settings: {
-    "import/resolver": { typescript: { project } },
-    /**
-     * enable components to be checked
-     * @see {@link https://github.com/jsx-eslint/eslint-plugin-jsx-a11y?tab=readme-ov-file#configurations}
-     */
-    "jsx-a11y": {
-      polymorphicPropName: "component",
-      components: {
-        Button: "button",
-        Icon: "svg",
-        Image: "img",
-        Input: "input",
-        Link: "a",
-        List: "ul",
-        ListItem: "li",
-        ListDivider: "li",
-        NextImage: "img",
-        NextLink: "a",
-        SvgIcon: "svg",
-        Textarea: "textarea",
-      },
-    },
-  },
+  plugins: ["next-on-pages"],
+  extends: [
+    ...[
+      "@vercel/style-guide/eslint/browser",
+      "@vercel/style-guide/eslint/node",
+      "@vercel/style-guide/eslint/react",
+      "@vercel/style-guide/eslint/next",
+      "@vercel/style-guide/eslint/typescript",
+    ].map(require.resolve),
+    "plugin:next-on-pages/recommended",
+  ],
   rules: {
     "@typescript-eslint/consistent-type-imports": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -70,6 +50,30 @@ const eslintConfig = {
     ],
     // sort named imports within an import statement
     "sort-imports": ["warn", { ignoreDeclarationSort: true }],
+  },
+  settings: {
+    "import/resolver": { typescript: { project } },
+    /**
+     * enable components to be checked
+     * @see {@link https://github.com/jsx-eslint/eslint-plugin-jsx-a11y?tab=readme-ov-file#configurations}
+     */
+    "jsx-a11y": {
+      polymorphicPropName: "component",
+      components: {
+        Button: "button",
+        Icon: "svg",
+        Image: "img",
+        Input: "input",
+        Link: "a",
+        List: "ul",
+        ListItem: "li",
+        ListDivider: "li",
+        NextImage: "img",
+        NextLink: "a",
+        SvgIcon: "svg",
+        Textarea: "textarea",
+      },
+    },
   },
   overrides: [
     // Next.js App Router file convention
