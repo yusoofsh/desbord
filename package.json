@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "build": "@cloudflare/next-on-pages@1",
+    "build": "next build",
     "dev": "next dev",
     "postinstall": "husky install",
     "start": "next start"
