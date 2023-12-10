@@ -5,7 +5,6 @@ const eslintConfig = {
   root: true,
   parser: "@typescript-eslint/parser",
   parserOptions: { project },
-  plugins: ["next-on-pages"],
   extends: [
     ...[
       "@vercel/style-guide/eslint/browser",
@@ -14,16 +13,15 @@ const eslintConfig = {
       "@vercel/style-guide/eslint/next",
       "@vercel/style-guide/eslint/typescript",
     ].map(require.resolve),
-    "plugin:next-on-pages/recommended",
   ],
   rules: {
+    "@typescript-eslint/no-shadow": "off",
     "@typescript-eslint/consistent-type-imports": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-confusing-void-expression": [
       "error",
       { ignoreArrowShorthand: true },
     ],
-    "@typescript-eslint/no-shadow": "off",
     // such that @/* imports will not be considered as external dependencies
     "react/function-component-definition": [
       "warn",
@@ -51,6 +49,29 @@ const eslintConfig = {
     // sort named imports within an import statement
     "sort-imports": ["warn", { ignoreDeclarationSort: true }],
   },
+  overrides: [
+    // Next.js App Router file convention
+    // Must use default export
+    {
+      files: [
+        "app/**/page.tsx",
+        "app/**/layout.tsx",
+        "app/**/not-found.tsx",
+        "app/**/*error.tsx",
+        "app/sitemap.ts",
+        "app/robots.ts",
+      ],
+      rules: {
+        "import/no-default-export": "off",
+        "import/prefer-default-export": ["error", { target: "any" }],
+      },
+    },
+    // module declarations
+    {
+      files: ["**/*.d.ts"],
+      rules: { "import/no-default-export": "off" },
+    },
+  ],
   settings: {
     "import/resolver": { typescript: { project } },
     /**
@@ -75,28 +96,5 @@ const eslintConfig = {
       },
     },
   },
-  overrides: [
-    // Next.js App Router file convention
-    // Must use default export
-    {
-      files: [
-        "app/**/page.tsx",
-        "app/**/layout.tsx",
-        "app/**/not-found.tsx",
-        "app/**/*error.tsx",
-        "app/sitemap.ts",
-        "app/robots.ts",
-      ],
-      rules: {
-        "import/no-default-export": "off",
-        "import/prefer-default-export": ["error", { target: "any" }],
-      },
-    },
-    // module declarations
-    {
-      files: ["**/*.d.ts"],
-      rules: { "import/no-default-export": "off" },
-    },
-  ],
 };
 module.exports = eslintConfig;
