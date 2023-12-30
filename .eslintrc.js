@@ -55,6 +55,7 @@ const eslintConfig = {
     {
       files: [
         "app/**/page.tsx",
+        "app/**/loading.tsx",
         "app/**/layout.tsx",
         "app/**/not-found.tsx",
         "app/**/*error.tsx",

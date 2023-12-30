@@ -1,4 +1,4 @@
-import { Revenue } from "@/lib/definitions";
+import { fetchRevenue } from "@/lib/data";
 import { generateYAxis } from "@/lib/utils";
 import { lusitana } from "@/ui/fonts";
 import { CalendarIcon } from "@heroicons/react/24/outline";
@@ -9,7 +9,9 @@ import { CalendarIcon } from "@heroicons/react/24/outline";
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-export const RevenueChart = ({ revenue }: { revenue: Revenue[] }) => {
+export const RevenueChart = async () => {
+  const revenue = await fetchRevenue(); // Fetch data inside the component
+
   const chartHeight = 350;
 
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
