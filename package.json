@@ -4,6 +4,7 @@
     "build": "next build",
     "dev": "next dev",
     "postinstall": "husky install",
+    "seed": "node -r dotenv/config ./scripts/seed.js",
     "start": "next start"
   },
   "dependencies": {
