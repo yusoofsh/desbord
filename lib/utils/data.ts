@@ -12,7 +12,7 @@ import {
   type User,
   formatCurrency,
   seed,
-} from ".";
+} from "@/lib/utils";
 
 type NullishNumber = undefined | null | number;
 type Primitive = string | number | boolean | undefined | null;

@@ -1,9 +1,8 @@
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/outline";
 
-import { Button } from "./button";
-
 import { lusitana } from "@/lib/utils/fonts";
+import { Button } from "@/lib/components/button";
 
 export const LoginForm = () => {
   return (

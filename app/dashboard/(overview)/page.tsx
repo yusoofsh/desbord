@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
-import { CardWrapper } from "./card-wrapper";
-
+import { CardWrapper } from "@/app/dashboard/(overview)/card-wrapper";
 import { LatestInvoices } from "@/lib/components/dashboard/latest-invoices";
 import { lusitana } from "@/lib/utils/fonts";
 import { RevenueChart } from "@/lib/components/dashboard/revenue-chart";

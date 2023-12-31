@@ -1,4 +1,4 @@
-import { Revenue } from "./definitions";
+import { Revenue } from "@/lib/utils/definitions";
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -65,5 +65,5 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   ];
 };
 
-export * from "./definitions";
-export * from "./seed";
+export * from "@/lib/utils/definitions";
+export * from "@/lib/utils/seed";

@@ -22,6 +22,12 @@ const eslintConfig = {
       "error",
       { ignoreArrowShorthand: true },
     ],
+    "@typescript-eslint/no-restricted-imports": [
+      "error",
+      {
+        "patterns": [".", "!./*", "!../*"],
+      },
+    ],
 
     // such that @/* imports will not be considered as external dependencies
     "react/function-component-definition": [
@@ -38,16 +44,6 @@ const eslintConfig = {
       {
         "newlines-between": "always",
         "pathGroups": [
-          {
-            pattern: ".",
-            group: "index",
-            position: "after",
-          },
-          {
-            pattern: "./**",
-            group: "index",
-            position: "after",
-          },
           {
             pattern: "@/**",
             group: "internal",
