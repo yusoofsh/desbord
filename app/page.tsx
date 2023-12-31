@@ -1,9 +1,10 @@
-import { AcmeLogo } from "@/ui/acme-logo";
-import { lusitana } from "@/ui/fonts";
-import styles from "@/ui/home.module.css";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+
+import { AcmeLogo } from "@/lib/components/acme-logo";
+import styles from "@/lib/styles/home.module.css";
+import { lusitana } from "@/lib/utils/fonts";
 
 const RootPage = () => {
   return (

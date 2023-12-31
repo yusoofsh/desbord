@@ -1,10 +1,11 @@
 {
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
     "postinstall": "husky install",
-    "seed": "node -r dotenv/config ./scripts/seed.js",
+    "seed": "bun lib/utils/seed.ts",
     "start": "next start"
   },
   "dependencies": {
@@ -36,16 +37,21 @@
     "@typescript-eslint/parser": "^6.12.0",
     "@vercel/style-guide": "^5.1.0",
     "dotenv": "^16.3.1",
-    "eslint": "^8.54.0",
+    "eslint": "^8.56.0",
     "eslint-config-next": "^14.0.3",
     "eslint-config-prettier": "9.0.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-package-json": "^0.2.0",
     "husky": "^8.0.3",
+    "jsonc-eslint-parser": "^2.4.0",
     "lint-staged": "^15.1.0",
     "postcss-load-config": "^4.0.2",
     "prettier": "^3.1.0",
     "sort-package-json": "^2.6.0",
     "typescript": "^5.3.2"
+  },
+  "engines": {
+    "npm": "bun"
   }
 }

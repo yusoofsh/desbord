@@ -1,15 +1,15 @@
 import { Suspense } from "react";
 
-import { LatestInvoices } from "@/ui/dashboard/latest-invoices";
-import { RevenueChart } from "@/ui/dashboard/revenue-chart";
-import { lusitana } from "@/ui/fonts";
+import { CardWrapper } from "./card-wrapper";
+
+import { LatestInvoices } from "@/lib/components/dashboard/latest-invoices";
+import { lusitana } from "@/lib/utils/fonts";
+import { RevenueChart } from "@/lib/components/dashboard/revenue-chart";
 import {
   CardsSkeleton,
   LatestInvoicesSkeleton,
   RevenueChartSkeleton,
-} from "@/ui/skeletons";
-
-import { CardWrapper } from "./card-wrapper";
+} from "@/lib/components/skeletons";
 
 const DashboardPage = () => {
   return (

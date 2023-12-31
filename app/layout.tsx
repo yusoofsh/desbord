@@ -1,5 +1,5 @@
-import "@/ui/global.css";
-import { inter } from "@/ui/fonts";
+import "@/lib/styles/global.css";
+import { inter } from "@/lib/utils/fonts";
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
