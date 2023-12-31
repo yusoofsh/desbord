@@ -4,7 +4,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "prepare": "husky install"
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
