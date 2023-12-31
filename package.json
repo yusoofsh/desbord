@@ -4,14 +4,13 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "postinstall": "husky install",
-    "start": "next start"
+    "prepare": "husky install"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
+    "@node-rs/argon2": "^1.5.2",
     "@tailwindcss/forms": "^0.5.7",
     "@vercel/postgres": "^0.5.1",
-    "argon2": "^0.31.2",
     "autoprefixer": "10.4.16",
     "clsx": "^2.0.0",
     "next": "^14.0.3",
