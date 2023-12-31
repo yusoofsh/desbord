@@ -5,10 +5,8 @@ const prettierCommand = (filenames) =>
 
 /** @type {import('@types/lint-staged').Config} */
 const lintStagedConfig = {
-  // Sort package.json keys
-  "package.json": "sort-package-json",
   // Lint & prettify TS and JS files
-  "**/*.(ts|tsx|js)": (filenames) => [
+  "**/*.(ts|tsx|js|cjs)": (filenames) => [
     eslintCommand(filenames),
     prettierCommand(filenames),
   ],
