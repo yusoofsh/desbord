@@ -42,6 +42,7 @@ const eslintConfig = {
   },
   rules: {
     "@typescript-eslint/no-shadow": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/consistent-type-imports": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-confusing-void-expression": [
@@ -62,7 +63,7 @@ const eslintConfig = {
         unnamedComponents: "arrow-function",
       },
     ],
-    "import/no-default-export": ["off"],
+    "import/no-default-export": "off",
     // sort import statements
     "import/order": [
       "warn",

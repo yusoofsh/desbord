@@ -1,5 +1,5 @@
 import { VercelPoolClient, db } from "@vercel/postgres";
-import { hash } from "bcrypt";
+import { hash } from "argon2";
 
 const users = [
   {
@@ -195,7 +195,7 @@ async function seedUsers(client: VercelPoolClient) {
   // Insert data into the "users" table
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
-      const hashedPassword = await hash(user.password, 10);
+      const hashedPassword = await hash(user.password);
       return client.sql`
         INSERT INTO users (id, name, email, password)
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
