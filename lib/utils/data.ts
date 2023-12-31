@@ -168,12 +168,14 @@ export async function fetchInvoicesPages(query: string) {
       invoices.status ILIKE ${`%${query}%`}
   `;
 
-    return Math.ceil(countData[0]?.count || 0 / ITEMS_PER_PAGE);
+    return countData[0] ? Math.ceil(countData[0].count / ITEMS_PER_PAGE) : 0;
   } catch (error) {
     await handleDatabaseError(
       error,
       "Failed to fetch total number of invoices.",
     );
+
+    return 0;
   }
 }
 

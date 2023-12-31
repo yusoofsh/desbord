@@ -1,3 +1,5 @@
+"use server";
+
 import { VercelPoolClient, db } from "@vercel/postgres";
 import { hash } from "argon2";
 
