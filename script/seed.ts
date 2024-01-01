@@ -299,21 +299,21 @@ async function seedRevenue(client: VercelPoolClient) {
   };
 }
 
-export async function seed() {
+async function seed() {
   const client = await db.connect();
 
-  try {
-    await seedUsers(client);
-    await seedCustomers(client);
-    await seedInvoices(client);
-    await seedRevenue(client);
-  } catch (error) {
-    // eslint-disable-next-line no-console -- Useful for informational purposes
-    console.error(
-      "An error occurred while attempting to seed the database:",
-      error,
-    );
-  } finally {
-    client.release();
-  }
+  await seedUsers(client);
+  await seedCustomers(client);
+  await seedInvoices(client);
+  await seedRevenue(client);
+
+  client.release();
 }
+
+seed().catch((error) =>
+  // eslint-disable-next-line no-console -- Useful for informational purpose
+  console.error(
+    "An error occurred while attempting to seed the database:",
+    error,
+  ),
+);

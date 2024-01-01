@@ -4,7 +4,8 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "seed": "bun script/seed.ts"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",

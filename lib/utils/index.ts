@@ -66,4 +66,3 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 };
 
 export * from "@/lib/utils/definitions";
-export * from "@/lib/utils/seed";
