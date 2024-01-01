@@ -2,8 +2,8 @@ import { PowerIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
 import { AcmeLogo } from "@/lib/components/acme-logo";
-import { NavLinks } from "@/lib/components/dashboard/nav-links";
 import { Button } from "@/lib/components/button";
+import { NavLinks } from "@/lib/components/dashboard/nav-links";
 
 export const SideNav = () => {
   return (

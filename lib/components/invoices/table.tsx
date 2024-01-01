@@ -1,12 +1,12 @@
 import Image from "next/image";
 
-import { fetchFilteredInvoices } from "@/lib/utils/data";
-import { formatCurrency, formatDateToLocal } from "@/lib/utils";
 import {
   DeleteInvoice,
   UpdateInvoice,
 } from "@/lib/components/invoices/buttons";
 import { InvoiceStatus } from "@/lib/components/invoices/status";
+import { formatCurrency, formatDateToLocal } from "@/lib/utils";
+import { fetchFilteredInvoices } from "@/lib/utils/data";
 
 export const InvoicesTable = async ({
   query,

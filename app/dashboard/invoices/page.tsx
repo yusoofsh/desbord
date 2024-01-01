@@ -1,12 +1,12 @@
 import { Suspense } from "react";
 
 import { CreateInvoice } from "@/lib/components/invoices/buttons";
+import { Pagination } from "@/lib/components/invoices/pagination";
 import { InvoicesTable } from "@/lib/components/invoices/table";
 import { Search } from "@/lib/components/search";
 import { InvoicesTableSkeleton } from "@/lib/components/skeletons";
-import { lusitana } from "@/lib/utils/fonts";
 import { fetchInvoicesPages } from "@/lib/utils/data";
-import { Pagination } from "@/lib/components/invoices/pagination";
+import { lusitana } from "@/lib/utils/fonts";
 
 const InvoicesPage = async ({
   searchParams,

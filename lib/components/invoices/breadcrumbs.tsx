@@ -17,7 +17,7 @@ export const Breadcrumbs = ({ breadcrumbs }: { breadcrumbs: Breadcrumb[] }) => {
           <li
             aria-current={breadcrumb.active}
             className={clsx(
-              breadcrumb.active ? "text-gray-900" : "text-gray-500",
+              breadcrumb.active ? "text-gray-900" : "text-gray-500"
             )}
             key={breadcrumb.href}
           >

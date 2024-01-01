@@ -2,13 +2,13 @@ import { Suspense } from "react";
 
 import { CardWrapper } from "@/app/dashboard/(overview)/card-wrapper";
 import { LatestInvoices } from "@/lib/components/dashboard/latest-invoices";
-import { lusitana } from "@/lib/utils/fonts";
 import { RevenueChart } from "@/lib/components/dashboard/revenue-chart";
 import {
   CardsSkeleton,
   LatestInvoicesSkeleton,
   RevenueChartSkeleton,
 } from "@/lib/components/skeletons";
+import { lusitana } from "@/lib/utils/fonts";
 
 const DashboardPage = () => {
   return (

@@ -1,7 +1,7 @@
 "use server";
 
-import { VercelPoolClient, db } from "@vercel/postgres";
 import { hash } from "@node-rs/argon2";
+import { VercelPoolClient, db } from "@vercel/postgres";
 
 const users = [
   {
@@ -194,6 +194,8 @@ async function seedUsers(client: VercelPoolClient) {
       );
     `;
 
+  console.log(`Created "users" table`);
+
   // Insert data into the "users" table
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
@@ -203,8 +205,10 @@ async function seedUsers(client: VercelPoolClient) {
         VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
-    }),
+    })
   );
+
+  console.log(`Seeded ${insertedUsers.length} users`);
 
   return {
     createTable,
@@ -226,6 +230,8 @@ async function seedInvoices(client: VercelPoolClient) {
   );
 `;
 
+  console.log(`Created "invoices" table`);
+
   // Insert data into the "invoices" table
   const insertedInvoices = await Promise.all(
     invoices.map(
@@ -233,9 +239,11 @@ async function seedInvoices(client: VercelPoolClient) {
         INSERT INTO invoices (customer_id, amount, status, date)
         VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
         ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
+      `
+    )
   );
+
+  console.log(`Seeded ${insertedInvoices.length} invoices`);
 
   return {
     createTable,
@@ -256,6 +264,8 @@ async function seedCustomers(client: VercelPoolClient) {
       );
     `;
 
+  console.log(`Created "customers" table`);
+
   // Insert data into the "customers" table
   const insertedCustomers = await Promise.all(
     customers.map(
@@ -263,9 +273,11 @@ async function seedCustomers(client: VercelPoolClient) {
         INSERT INTO customers (id, name, email, image_url)
         VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
         ON CONFLICT (id) DO NOTHING;
-      `,
-    ),
+      `
+    )
   );
+
+  console.log(`Seeded ${insertedCustomers.length} customers`);
 
   return {
     createTable,
@@ -282,6 +294,8 @@ async function seedRevenue(client: VercelPoolClient) {
       );
     `;
 
+  console.log(`Created "revenue" table`);
+
   // Insert data into the "revenue" table
   const insertedRevenue = await Promise.all(
     revenue.map(
@@ -289,9 +303,11 @@ async function seedRevenue(client: VercelPoolClient) {
         INSERT INTO revenue (month, revenue)
         VALUES (${rev.month}, ${rev.revenue})
         ON CONFLICT (month) DO NOTHING;
-      `,
-    ),
+      `
+    )
   );
+
+  console.log(`Seeded ${insertedRevenue.length} revenue`);
 
   return {
     createTable,
@@ -311,9 +327,8 @@ async function seed() {
 }
 
 seed().catch((error) =>
-  // eslint-disable-next-line no-console -- Useful for informational purpose
   console.error(
     "An error occurred while attempting to seed the database:",
-    error,
-  ),
+    error
+  )
 );

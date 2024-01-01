@@ -1,7 +1,7 @@
 import { CalendarIcon } from "@heroicons/react/24/outline";
 
-import { fetchRevenue } from "@/lib/utils/data";
 import { generateYAxis } from "@/lib/utils";
+import { fetchRevenue } from "@/lib/utils/data";
 import { lusitana } from "@/lib/utils/fonts";
 
 // This component is representational only.

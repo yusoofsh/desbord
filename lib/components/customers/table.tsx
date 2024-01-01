@@ -1,8 +1,8 @@
 import Image from "next/image";
 
+import { Search } from "@/lib/components/search";
 import { FormattedCustomersTable } from "@/lib/utils/definitions";
 import { lusitana } from "@/lib/utils/fonts";
-import { Search } from "@/lib/components/search";
 
 export const CustomersTable = ({
   customers,

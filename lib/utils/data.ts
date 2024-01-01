@@ -62,7 +62,7 @@ export async function fetchCardData() {
   const numberOfCustomers = Number(customerCountData[0]?.count ?? 0);
   const totalPaidInvoices = formatCurrency(invoiceStatusData[0]?.paid ?? 0);
   const totalPendingInvoices = formatCurrency(
-    invoiceStatusData[0]?.pending ?? 0,
+    invoiceStatusData[0]?.pending ?? 0
   );
 
   return {
@@ -76,7 +76,7 @@ export async function fetchCardData() {
 const ITEMS_PER_PAGE = 6;
 export async function fetchFilteredInvoices(
   query: string,
-  currentPage: number,
+  currentPage: number
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
