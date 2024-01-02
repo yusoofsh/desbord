@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@/lib/components/invoices/breadcrumbs";
-import { AddInvoiceForm } from "@/lib/components/invoices/create-form";
+import { InvoiceAddForm } from "@/lib/components/invoices/create-form";
 import { fetchCustomers } from "@/lib/utils/data";
 
 const InvoiceCreatePage = async () => {
@@ -17,7 +17,7 @@ const InvoiceCreatePage = async () => {
           },
         ]}
       />
-      <AddInvoiceForm customers={customers} />
+      <InvoiceAddForm customers={customers} />
     </main>
   );
 };

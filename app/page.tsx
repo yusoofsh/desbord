@@ -38,14 +38,14 @@ const RootPage = () => {
             height={760}
             src="/hero-desktop.png"
             width={1000}
-          />{" "}
+          />
           <Image
             alt="Screenshot of the dashboard project showing mobile version"
             className="block md:hidden"
             height={620}
             src="/hero-mobile.png"
             width={560}
-          />{" "}
+          />
         </div>
       </div>
     </main>

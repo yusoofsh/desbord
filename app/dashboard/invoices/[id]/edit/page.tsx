@@ -1,5 +1,5 @@
 import { Breadcrumbs } from "@/lib/components/invoices/breadcrumbs";
-import { EditInvoiceForm } from "@/lib/components/invoices/edit-form";
+import { InvoiceEditForm } from "@/lib/components/invoices/edit-form";
 import { fetchCustomers, fetchInvoiceById } from "@/lib/utils/data";
 import { notFound } from "next/navigation";
 
@@ -26,7 +26,7 @@ const InvoiceEditPage = async ({ params }: { params: { id: string } }) => {
           },
         ]}
       />
-      <EditInvoiceForm invoice={invoice} customers={customers} />
+      <InvoiceEditForm invoice={invoice} customers={customers} />
     </>
   );
 };
