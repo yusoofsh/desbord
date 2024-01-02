@@ -8,18 +8,22 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 
+import { updateInvoice } from "@/lib/actions";
 import { Button } from "@/lib/components/button";
 import { CustomerField, InvoiceForm } from "@/lib/utils/definitions";
 
-export const EditInvoiceForm = ({
+export const EditInvoiceForm = async ({
   invoice,
   customers,
 }: {
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) => {
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+
   return (
-    <form>
+    <form action={updateInvoiceWithId}>
+      {" "}
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Customer Name */}
         <div className="mb-4">
