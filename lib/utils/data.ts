@@ -1,6 +1,3 @@
-import { type QueryResultRow, sql } from "@vercel/postgres";
-import { unstable_noStore as noStore } from "next/cache";
-
 import {
   type CustomerField,
   type CustomersTable,
@@ -9,8 +6,10 @@ import {
   type LatestInvoiceRaw,
   type Revenue,
   type User,
-  formatCurrency,
+  formatCurrency
 } from "@/lib/utils";
+import { type QueryResultRow, sql } from "@vercel/postgres";
+import { unstable_noStore as noStore } from "next/cache";
 
 type NullishNumber = undefined | null | number;
 type Primitive = string | number | boolean | undefined | null;
@@ -42,7 +41,7 @@ export async function fetchLatestInvoices() {
 
   return latestInvoices.map((invoice) => ({
     ...invoice,
-    amount: formatCurrency(invoice.amount),
+    amount: formatCurrency(invoice.amount)
   }));
 }
 
@@ -55,7 +54,7 @@ export async function fetchCardData() {
         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
         FROM invoices
-        `,
+        `
     ]);
 
   const numberOfInvoices = Number(invoiceCountData[0]?.count ?? 0);
@@ -69,7 +68,7 @@ export async function fetchCardData() {
     numberOfCustomers,
     numberOfInvoices,
     totalPaidInvoices,
-    totalPendingInvoices,
+    totalPendingInvoices
   };
 }
 
@@ -133,7 +132,7 @@ export async function fetchInvoiceById(id: string) {
 
   const invoice = invoiceData.map((invoice) => ({
     ...invoice,
-    amount: invoice.amount / 100,
+    amount: invoice.amount / 100
   }));
 
   return invoice[0];
@@ -173,7 +172,7 @@ export async function fetchFilteredCustomers(query: string) {
   const customers = customersData.map((customer) => ({
     ...customer,
     total_pending: formatCurrency(customer.total_pending),
-    total_paid: formatCurrency(customer.total_paid),
+    total_paid: formatCurrency(customer.total_paid)
   }));
 
   return customers;

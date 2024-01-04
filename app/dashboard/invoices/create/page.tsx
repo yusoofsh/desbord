@@ -13,8 +13,8 @@ const InvoiceCreatePage = async () => {
           {
             label: "Create Invoice",
             href: "/dashboard/invoices/create",
-            active: true,
-          },
+            active: true
+          }
         ]}
       />
       <InvoiceAddForm customers={customers} />

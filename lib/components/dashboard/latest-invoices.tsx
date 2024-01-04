@@ -1,9 +1,8 @@
+import { fetchLatestInvoices } from "@/lib/utils/data";
+import { lusitana } from "@/lib/utils/fonts";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
 import Image from "next/image";
-
-import { fetchLatestInvoices } from "@/lib/utils/data";
-import { lusitana } from "@/lib/utils/fonts";
 
 export const LatestInvoices = async () => {
   const latestInvoices = await fetchLatestInvoices();
@@ -21,7 +20,7 @@ export const LatestInvoices = async () => {
                 className={clsx(
                   "flex flex-row items-center justify-between py-4",
                   {
-                    "border-t": i !== 0,
+                    "border-t": i !== 0
                   }
                 )}
                 key={invoice.id}

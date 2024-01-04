@@ -7,7 +7,7 @@ const InvoiceEditPage = async ({ params }: { params: { id: string } }) => {
   const id = params.id;
   const [invoice, customers] = await Promise.all([
     fetchInvoiceById(id),
-    fetchCustomers(),
+    fetchCustomers()
   ]);
 
   if (!invoice) {
@@ -22,8 +22,8 @@ const InvoiceEditPage = async ({ params }: { params: { id: string } }) => {
           {
             label: "Edit Invoice",
             href: `/dashboard/invoices/${id}/edit`,
-            active: true,
-          },
+            active: true
+          }
         ]}
       />
       <InvoiceEditForm invoice={invoice} customers={customers} />

@@ -1,21 +1,19 @@
 "use client";
-
+import { updateInvoice } from "@/lib/actions";
+import { Button } from "@/lib/components/button";
+import { CustomerField, InvoiceForm } from "@/lib/utils/definitions";
 import {
   CheckIcon,
   ClockIcon,
   CurrencyDollarIcon,
-  UserCircleIcon,
+  UserCircleIcon
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-
-import { updateInvoice } from "@/lib/actions";
-import { Button } from "@/lib/components/button";
-import { CustomerField, InvoiceForm } from "@/lib/utils/definitions";
 import { useFormState } from "react-dom";
 
 export const InvoiceEditForm = async ({
   invoice,
-  customers,
+  customers
 }: {
   invoice: InvoiceForm;
   customers: CustomerField[];

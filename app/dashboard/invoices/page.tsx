@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-
 import { CreateInvoice } from "@/lib/components/invoices/buttons";
 import { Pagination } from "@/lib/components/invoices/pagination";
 import { InvoicesTable } from "@/lib/components/invoices/table";
@@ -7,9 +5,10 @@ import { Search } from "@/lib/components/search";
 import { InvoicesTableSkeleton } from "@/lib/components/skeletons";
 import { fetchInvoicesPages } from "@/lib/utils/data";
 import { lusitana } from "@/lib/utils/fonts";
+import { Suspense } from "react";
 
 const InvoicesPage = async ({
-  searchParams,
+  searchParams
 }: {
   searchParams?: {
     query?: string;

@@ -1,23 +1,22 @@
+import { lusitana } from "@/lib/utils/fonts";
 import {
   BanknotesIcon,
   ClockIcon,
   InboxIcon,
-  UserGroupIcon,
+  UserGroupIcon
 } from "@heroicons/react/24/outline";
-
-import { lusitana } from "@/lib/utils/fonts";
 
 const iconMap = {
   collected: BanknotesIcon,
   customers: UserGroupIcon,
   pending: ClockIcon,
-  invoices: InboxIcon,
+  invoices: InboxIcon
 };
 
 export const Card = ({
   title,
   value,
-  type,
+  type
 }: {
   title: string;
   value: number | string;

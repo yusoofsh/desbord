@@ -1,19 +1,17 @@
 "use client";
-
+import { authenticate } from "@/lib/actions";
+import { Button } from "@/lib/components/button";
+import { lusitana } from "@/lib/utils/fonts";
 import { ArrowRightIcon } from "@heroicons/react/20/solid";
 import {
   AtSymbolIcon,
   ExclamationCircleIcon,
-  KeyIcon,
+  KeyIcon
 } from "@heroicons/react/24/outline";
 import { useFormState, useFormStatus } from "react-dom";
 
-import { authenticate } from "@/lib/actions";
-import { Button } from "@/lib/components/button";
-import { lusitana } from "@/lib/utils/fonts";
-
 export const LoginForm = () => {
-  const [errorMessage, dispatch] = useFormState(authenticate, undefined);
+  const [error, dispatch] = useFormState(authenticate, undefined);
 
   return (
     <form action={dispatch} className="space-y-3">
@@ -65,10 +63,10 @@ export const LoginForm = () => {
         <LoginButton />
         <div className="flex h-8 items-end space-x-1">
           <div className="flex h-8 items-end space-x-1" aria-live="polite">
-            {errorMessage && (
+            {error && (
               <>
                 <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-500">{errorMessage}</p>
+                <p className="text-sm text-red-500">{error}</p>
               </>
             )}
           </div>

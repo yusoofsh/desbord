@@ -1,11 +1,9 @@
 "use client";
-
+import { generatePagination } from "@/lib/utils";
 import { ArrowLeftIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-
-import { generatePagination } from "@/lib/utils";
 
 export const Pagination = ({ totalPages }: { totalPages: number }) => {
   const pathname = usePathname();
@@ -62,7 +60,7 @@ const PaginationNumber = ({
   page,
   href,
   isActive,
-  position,
+  position
 }: {
   page: number | string;
   href: string;
@@ -76,7 +74,7 @@ const PaginationNumber = ({
       "rounded-r-md": position === "last" || position === "single",
       "z-10 bg-blue-600 border-blue-600 text-white": isActive,
       "hover:bg-gray-100": !isActive && position !== "middle",
-      "text-gray-300": position === "middle",
+      "text-gray-300": position === "middle"
     }
   );
 
@@ -92,7 +90,7 @@ const PaginationNumber = ({
 const PaginationArrow = ({
   href,
   direction,
-  isDisabled,
+  isDisabled
 }: {
   href: string;
   direction: "left" | "right";
@@ -104,7 +102,7 @@ const PaginationArrow = ({
       "pointer-events-none text-gray-300": isDisabled,
       "hover:bg-gray-100": !isDisabled,
       "mr-2 md:mr-4": direction === "left",
-      "ml-2 md:ml-4": direction === "right",
+      "ml-2 md:ml-4": direction === "right"
     }
   );
 

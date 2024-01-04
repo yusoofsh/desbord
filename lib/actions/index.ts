@@ -1,12 +1,10 @@
 "use server";
-
+import { signIn } from "@/lib/utils/auth";
 import { sql } from "@vercel/postgres";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-
-import { signIn } from "@/lib/utils/auth";
 
 const FormSchema = z.object({
   id: z.string(),
@@ -15,9 +13,9 @@ const FormSchema = z.object({
     .number()
     .gt(0, { message: "Please enter an amount greater than $0." }),
   status: z.enum(["pending", "paid"], {
-    required_error: "Please select an invoice status.",
+    required_error: "Please select an invoice status."
   }),
-  date: z.string(),
+  date: z.string()
 });
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
@@ -38,7 +36,7 @@ export async function createInvoice(_state: State, formData: FormData) {
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing fields. Failed to create invoice.",
+      message: "Missing fields. Failed to create invoice."
     };
   }
 
@@ -53,7 +51,7 @@ export async function createInvoice(_state: State, formData: FormData) {
     `;
   } catch (error) {
     return {
-      message: "Database error: Failed to create invoice.",
+      message: "Database error: Failed to create invoice."
     };
   }
 
@@ -71,7 +69,7 @@ export async function updateInvoice(
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing fields. Failed to update invoice.",
+      message: "Missing fields. Failed to update invoice."
     };
   }
 
@@ -97,7 +95,7 @@ export async function deleteInvoice(_id: string) {
 }
 
 export async function authenticate(
-  state: string | undefined,
+  _state: string | undefined,
   formData: FormData
 ) {
   try {

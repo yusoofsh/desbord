@@ -6,7 +6,7 @@ export const CardWrapper = async () => {
     numberOfInvoices,
     numberOfCustomers,
     totalPaidInvoices,
-    totalPendingInvoices,
+    totalPendingInvoices
   } = await fetchCardData();
 
   return (

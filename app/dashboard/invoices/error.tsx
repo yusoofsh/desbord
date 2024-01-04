@@ -1,11 +1,10 @@
 "use client";
-
 import { Button } from "@/lib/components/button";
 import { useEffect } from "react";
 
 const InvoiceError = ({
   error,
-  reset,
+  reset
 }: {
   error: Error & { digest?: string };
   reset: () => void;

@@ -1,10 +1,9 @@
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
-import Link from "next/link";
-
 import { AcmeLogo } from "@/lib/components/acme-logo";
 import styles from "@/lib/styles/home.module.css";
 import { lusitana } from "@/lib/utils/fonts";
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
+import Link from "next/link";
 
 const RootPage = () => {
   return (

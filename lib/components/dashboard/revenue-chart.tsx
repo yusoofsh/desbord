@@ -1,8 +1,7 @@
-import { CalendarIcon } from "@heroicons/react/24/outline";
-
 import { generateYAxis } from "@/lib/utils";
 import { fetchRevenue } from "@/lib/utils/data";
 import { lusitana } from "@/lib/utils/fonts";
+import { CalendarIcon } from "@heroicons/react/24/outline";
 
 // This component is representational only.
 // For data visualization UI, check out:
@@ -42,7 +41,7 @@ export const RevenueChart = async () => {
               <div
                 className="w-full rounded-md bg-blue-300"
                 style={{
-                  height: `${(chartHeight / topLabel) * month.revenue}px`,
+                  height: `${(chartHeight / topLabel) * month.revenue}px`
                 }}
               />
               <p className="-rotate-90 text-sm text-gray-400 sm:rotate-0">

@@ -1,16 +1,15 @@
-import Image from "next/image";
-
 import {
   DeleteInvoice,
-  UpdateInvoice,
+  UpdateInvoice
 } from "@/lib/components/invoices/buttons";
 import { InvoiceStatus } from "@/lib/components/invoices/status";
 import { formatCurrency, formatDateToLocal } from "@/lib/utils";
 import { fetchFilteredInvoices } from "@/lib/utils/data";
+import Image from "next/image";
 
 export const InvoicesTable = async ({
   query,
-  currentPage,
+  currentPage
 }: {
   query: string;
   currentPage: number;
