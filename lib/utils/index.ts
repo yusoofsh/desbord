@@ -1,4 +1,5 @@
-import { Revenue } from "@/lib/utils/definitions";
+import { Middleware, Revenue } from "@/lib/utils";
+import { NextRequest, NextResponse } from "next/server";
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -63,6 +64,28 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
     "...",
     totalPages,
   ];
+};
+
+export const stackMiddlewares = (middlewares: Middleware[]) => {
+  return async (
+    req: NextRequest,
+    res: NextResponse,
+    next: () => Promise<void>
+  ) => {
+    let idx = -1;
+    async function execute(i: number): Promise<void> {
+      if (i <= idx) Promise.reject("Multiple next() calls detected.");
+      idx = i;
+      const middleware = middlewares[i];
+      if (middleware) {
+        return middleware(req, res, () => execute(i + 1));
+      }
+      if (next) {
+        return await next();
+      }
+    }
+    return await execute(0);
+  };
 };
 
 export * from "@/lib/utils/definitions";

@@ -1,7 +1,5 @@
-"use server";
-
-import { hash } from "@node-rs/argon2";
 import { VercelPoolClient, db } from "@vercel/postgres";
+import { hash } from "argon2";
 
 const users = [
   {
