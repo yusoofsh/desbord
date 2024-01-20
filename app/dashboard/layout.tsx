@@ -1,4 +1,9 @@
 import { SideNav } from "@/lib/components/dashboard/sidenav";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Home"
+};
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (

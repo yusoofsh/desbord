@@ -1,4 +1,4 @@
-import { VercelPoolClient, db } from "@vercel/postgres";
+import { type VercelPoolClient, db } from "@vercel/postgres";
 import bcrypt from "bcryptjs";
 
 const users = [
