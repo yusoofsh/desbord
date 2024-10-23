@@ -1,3 +1,4 @@
+import { useActionState } from "react";
 "use client";
 import { authenticate } from "@/lib/actions";
 import { Button } from "@/lib/components/button";
@@ -8,10 +9,10 @@ import {
   ExclamationCircleIcon,
   KeyIcon
 } from "@heroicons/react/24/outline";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
 export const LoginForm = () => {
-  const [error, dispatch] = useFormState(authenticate, undefined);
+  const [error, dispatch] = useActionState(authenticate, undefined);
 
   return (
     <form action={dispatch} className="space-y-3">

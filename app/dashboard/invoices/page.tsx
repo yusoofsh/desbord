@@ -12,14 +12,15 @@ export const metadata: Metadata = {
   title: "Invoices"
 };
 
-const InvoicesPage = async ({
-  searchParams
-}: {
-  searchParams?: {
-    query?: string;
-    page?: string;
-  };
-}) => {
+const InvoicesPage = async (
+  props: {
+    searchParams?: Promise<{
+      query?: string;
+      page?: string;
+    }>;
+  }
+) => {
+  const searchParams = await props.searchParams;
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
 
