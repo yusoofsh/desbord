@@ -1,14 +1,14 @@
 import { eq, sql } from "drizzle-orm"
-import db from "./db"
-import { decryptToString, encryptString } from "./encryption"
-import { hashPassword } from "./password"
-import { generateRandomRecoveryCode } from "./random"
 import {
   passkeyCredentials,
   securityKeyCredentials,
   totpCredentials,
   users,
-} from "@/lib/utils/server/schema"
+} from "@/lib/utils/schema"
+import db from "@/lib/utils/db"
+import { hashPassword } from "@/lib/utils/password"
+import { generateRandomRecoveryCode } from "@/lib/utils/random"
+import { decryptToString, encryptString } from "@/lib/utils/encryption"
 
 export function verifyUsernameInput(username: string): boolean {
   return (

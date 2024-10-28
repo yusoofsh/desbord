@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 const tailwindConfig = {
-  content: ["./app/**/*.{js,jsx,ts,tsx,mdx}", "./lib/**/*.{js,jsx,ts,tsx,mdx}"],
+  content: ["./src/**/*.{jsx,tsx,mdx}"],
   theme: {
     extend: {
       gridTemplateColumns: {

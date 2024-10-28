@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm"
-import { users } from "@/lib/utils/server/schema"
-import db from "./db"
+import { users } from "@/lib/utils/schema"
+import db from "@/lib/utils/db"
 
 export function verifyEmailInput(email: string): boolean {
   return /^.+@.+\..+$/.test(email) && email.length < 256

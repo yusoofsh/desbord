@@ -1,4 +1,4 @@
-import db from "./db"
+// import type { User } from "@/lib/utils/user"
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
@@ -6,9 +6,8 @@ import {
 import { sha256 } from "@oslojs/crypto/sha2"
 import { cookies } from "next/headers"
 // import { cache } from "react"
-
-// import type { User } from "./user"
 import { sql } from "drizzle-orm"
+import db from "@/lib/utils/db"
 
 // export async function validateSessionToken(
 //   token: string,
@@ -36,7 +35,7 @@ import { sql } from "drizzle-orm"
 //     expiresAt: new Date(row.number(2) * 1000),
 //     twoFactorVerified: Boolean(row.number(3)),
 //   }
-//   const user: User = {
+// const user: User = {
 //     id: row.number(4),
 //     email: row.string(5),
 //     username: row.string(6),

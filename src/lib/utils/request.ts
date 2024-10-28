@@ -1,5 +1,5 @@
+import { RefillingTokenBucket } from "@/lib/utils/rate-limit"
 import { headers } from "next/headers"
-import { RefillingTokenBucket } from "./rate-limit"
 
 export const globalBucket = new RefillingTokenBucket<string>(100, 1)
 

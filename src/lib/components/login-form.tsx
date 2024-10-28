@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline"
 import { ArrowRightIcon } from "@heroicons/react/20/solid"
 import { useActionState } from "react"
-import { lusitana } from "@/lib/utils/client/fonts"
+import { lusitana } from "@/lib/utils/fonts"
 import { Button } from "@/lib/components/button"
 import { loginAction } from "@/app/login/actions"
 
