@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "vercel-build": "next build",
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",

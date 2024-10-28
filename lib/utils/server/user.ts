@@ -69,34 +69,42 @@ export async function updateUserEmailAndSetEmailAsVerified(
   )
 }
 
-export async function setUserAsEmailVerifiedIfEmailMatches(
-  userId: number,
-  email: string,
-): Promise<boolean> {
-  const result = await db.run(
-    sql`UPDATE user SET email_verified = 1 WHERE id = ${userId} AND email = ${email}`,
-  )
-  return result.changes > 0
-}
+// export async function setUserAsEmailVerifiedIfEmailMatches(
+//   userId: number,
+//   email: string,
+// ): Promise<boolean> {
+//   const result = await db.run(
+//     sql`UPDATE user SET email_verified = 1 WHERE id = ${userId} AND email = ${email}`,
+//   )
+//   return result.changes > 0
+// }
 
 export async function getUserPasswordHash(userId: number): Promise<string> {
-  const row = await db.run(
-    sql`SELECT password_hash FROM user WHERE id = ${userId}`,
-  )
-  if (row === null) {
+  const result = await db
+    .select({ passwordHash: users.passwordHash })
+    .from(users)
+    .where(eq(users.id, userId))
+    .get()
+
+  if (result === undefined) {
     throw new Error("Invalid user ID")
   }
-  return row.string(0)
+
+  return result.passwordHash
 }
 
 export async function getUserRecoverCode(userId: number): Promise<string> {
-  const row = await db.run(
-    sql`SELECT recovery_code FROM user WHERE id = ${userId}`,
-  )
-  if (row === null) {
+  const result = await db
+    .select({ recoveryCode: users.recoveryCode })
+    .from(users)
+    .where(eq(users.id, userId))
+    .get()
+
+  if (result === undefined) {
     throw new Error("Invalid user ID")
   }
-  return decryptToString(row.bytes(0))
+
+  return decryptToString(result.recoveryCode as Uint8Array)
 }
 
 export async function resetUserRecoveryCode(userId: number): Promise<string> {
