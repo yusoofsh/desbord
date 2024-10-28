@@ -4,4 +4,5 @@ const postCSSConfig = {
     tailwindcss: {},
   },
 }
+
 export default postCSSConfig
