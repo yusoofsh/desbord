@@ -1,0 +1,11 @@
+{
+  "sqltools.useNodeRuntime": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "database": "${workspaceFolder:desbord}/.wrangler/state/v3/d1/miniflare-D1DatabaseObject/6ce6c2e819285493ddcaa331c7910ccf077bda9781c31dc4dc07d060f4298208.sqlite",
+      "name": "desbord"
+    }
+  ]
+}

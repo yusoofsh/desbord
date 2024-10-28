@@ -1,5 +1,5 @@
 import { GlobeAltIcon } from "@heroicons/react/24/outline"
-import { lusitana } from "@/lib/utils/fonts"
+import { lusitana } from "@/lib/utils/client/fonts"
 
 export default function Logo() {
   return (
@@ -7,7 +7,7 @@ export default function Logo() {
       className={`${lusitana.className} flex flex-row items-center leading-none text-white`}
     >
       <GlobeAltIcon className="h-12 w-12 rotate-[15deg]" />
-      <p className="text-[44px] ">Acme</p>
+      <p className="text-[44px]">Acme</p>
     </div>
   )
 }

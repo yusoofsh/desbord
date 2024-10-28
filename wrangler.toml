@@ -1,4 +1,13 @@
 name = "desbord"
-compatibility_date = "2024-07-29"
-compatibility_flags = ["nodejs_compat"]
+compatibility_date = "2024-09-23"
+compatibility_flags = [
+  "nodejs_compat_v2",
+]
 pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "CLOUDFLARE_DB_ID"
+preview_database_id = "CLOUDFLARE_DB_ID"
+database_name = "desbord"
+database_id = "0d45842f-c28a-4cdb-b32a-1509a3d516f6"
+migrations_dir = ".drizzle/migrations"
