@@ -1,9 +1,14 @@
-import { sql } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import db from "./db"
 import { decryptToString, encryptString } from "./encryption"
 import { hashPassword } from "./password"
 import { generateRandomRecoveryCode } from "./random"
-import { users } from "@/lib/utils/server/schema"
+import {
+  passkeyCredentials,
+  securityKeyCredentials,
+  totpCredentials,
+  users,
+} from "@/lib/utils/server/schema"
 
 export function verifyUsernameInput(username: string): boolean {
   return (
@@ -19,6 +24,7 @@ export async function createUser(
   const passwordHash = await hashPassword(password)
   const recoveryCode = generateRandomRecoveryCode()
   const encryptedRecoveryCode = await encryptString(recoveryCode)
+
   const result = await db
     .insert(users)
     .values({
@@ -28,12 +34,10 @@ export async function createUser(
       recoveryCode: encryptedRecoveryCode,
     })
     .returning({ id: users.id })
-    .execute()
-  if (result === null) {
-    throw new Error("Unexpected error")
-  }
+    .get()
+
   const user: User = {
-    id: row.number(0),
+    ...result,
     username,
     email,
     emailVerified: false,
@@ -42,6 +46,7 @@ export async function createUser(
     registeredSecurityKey: false,
     registered2FA: false,
   }
+
   return user
 }
 
@@ -104,28 +109,39 @@ export async function resetUserRecoveryCode(userId: number): Promise<string> {
 }
 
 export async function getUserFromEmail(email: string): Promise<User | null> {
-  const row = await db.run(
-    sql`
-      SELECT users.id, users.email, users.username, users.email_verified, IIF(totp_credentials.id IS NOT NULL, 1, 0), IIF(passkey_credentials.id IS NOT NULL, 1, 0), IIF(security_key_credentials.id IS NOT NULL, 1, 0) FROM users
-      LEFT JOIN totp_credentials ON users.id = totp_credentials.user_id
-      LEFT JOIN passkey_credentials ON users.id = passkey_credentials.user_id
-      LEFT JOIN security_key_credentials ON users.id = security_key_credentials.user_id
-      WHERE users.email = ${email}
-    `,
-  )
-  if (row === null) {
+  const result = await db
+    .select({
+      id: users.id,
+      email: users.email,
+      username: users.username,
+      emailVerified: users.emailVerified,
+      hasTotp: totpCredentials.id,
+      hasPasskey: passkeyCredentials.id,
+      hasSecurityKey: securityKeyCredentials.id,
+    })
+    .from(users)
+    .leftJoin(totpCredentials, eq(users.id, totpCredentials.userId))
+    .leftJoin(passkeyCredentials, eq(users.id, passkeyCredentials.userId))
+    .leftJoin(
+      securityKeyCredentials,
+      eq(users.id, securityKeyCredentials.userId),
+    )
+    .where(eq(users.email, email))
+    .get()
+
+  if (result === undefined) {
     return null
   }
+
   const user: User = {
-    id: row.number(0),
-    email: row.string(1),
-    username: row.string(2),
-    emailVerified: Boolean(row.number(3)),
-    registeredTOTP: Boolean(row.number(4)),
-    registeredPasskey: Boolean(row.number(5)),
-    registeredSecurityKey: Boolean(row.number(6)),
+    ...result,
+    emailVerified: Boolean(result.emailVerified),
+    registeredTOTP: Boolean(result.hasTotp),
+    registeredPasskey: Boolean(result.hasPasskey),
+    registeredSecurityKey: Boolean(result.hasSecurityKey),
     registered2FA: false,
   }
+
   if (
     user.registeredPasskey ||
     user.registeredSecurityKey ||
@@ -133,6 +149,7 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
   ) {
     user.registered2FA = true
   }
+
   return user
 }
 
