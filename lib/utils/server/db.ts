@@ -13,7 +13,7 @@ const globalForDb = globalThis as unknown as {
 }
 
 const createDb = () => {
-  client = globalForDb.client ?? getRequestContext().env.CLOUDFLARE_DB_ID
+  client = globalForDb.client ?? getRequestContext().env.DB
 
   if (process.env.NODE_ENV === "development") globalForDb.client = client
 
