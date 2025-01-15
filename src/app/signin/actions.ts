@@ -17,7 +17,7 @@ import { globalPOSTRateLimit } from "@/lib/utils/request"
 const throttler = new Throttler<number>([1, 2, 4, 8, 16, 30, 60, 180, 300])
 const ipBucket = new RefillingTokenBucket<string>(20, 1)
 
-export async function loginAction(
+export async function signinAction(
   _prevState: string | undefined,
   formData: FormData,
 ): Promise<string> {

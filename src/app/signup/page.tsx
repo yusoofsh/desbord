@@ -1,9 +1,9 @@
-import LoginForm from "@/lib/components/login-form"
+import SignupForm from "@/lib/components/signup-form"
 import Logo from "@/lib/components/logo"
 
 export const runtime = "edge"
 
-export default function LoginPage() {
+export default function SignupPage() {
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
@@ -12,7 +12,7 @@ export default function LoginPage() {
             <Logo />
           </div>
         </div>
-        <LoginForm />
+        <SignupForm />
       </div>
     </main>
   )
