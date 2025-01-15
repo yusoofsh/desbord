@@ -88,3 +88,28 @@ export const securityKeyCredentials = sqliteTable("security_key_credentials", {
   algorithm: integer("algorithm").notNull(),
   publicKey: blob("public_key").notNull(),
 })
+
+// Revenue table
+export const revenue = sqliteTable("revenue", {
+  month: text("month").notNull(),
+  revenue: integer("revenue").notNull(),
+})
+
+// Customers table
+export const customers = sqliteTable("customers", {
+  id: text("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  email: text("email").notNull(),
+  image_url: text("image_url"),
+})
+
+// Invoices table
+export const invoices = sqliteTable("invoices", {
+  id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+  customer_id: text("customer_id")
+    .notNull()
+    .references(() => customers.id),
+  amount: integer("amount").notNull(),
+  status: text("status").notNull(),
+  date: text("date").notNull(),
+})

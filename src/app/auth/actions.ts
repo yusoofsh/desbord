@@ -32,6 +32,7 @@ export async function signinAction(
   if (!globalPOSTRateLimit()) {
     return "Too many requests"
   }
+
   const clientIP = (await headers()).get("X-Forwarded-For")
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return "Too many requests"
@@ -39,6 +40,7 @@ export async function signinAction(
 
   const email = formData.get("email")
   const password = formData.get("password")
+
   if (typeof email !== "string" || typeof password !== "string") {
     return "Invalid or missing fields"
   }
@@ -48,6 +50,7 @@ export async function signinAction(
   if (!verifyEmailInput(email)) {
     return "Invalid email"
   }
+
   const user = await getUserFromEmail(email)
   if (user === null) {
     return "Account does not exist"
@@ -67,6 +70,7 @@ export async function signinAction(
   }
 
   throttler.reset(user.id)
+
   const sessionFlags: SessionFlags = {
     twoFactorVerified: false,
   }
@@ -75,15 +79,7 @@ export async function signinAction(
   const session = await createSession(sessionToken, user.id, sessionFlags)
   setSessionTokenCookie(sessionToken, session.expiresAt)
 
-  if (!user.emailVerified) {
-    return redirect("/verify-email")
-  }
-
-  if (!user.registered2FA) {
-    return redirect("/2fa/setup")
-  }
-
-  return redirect("/2fa")
+  return redirect("/home")
 }
 
 export async function signupAction(
@@ -94,7 +90,6 @@ export async function signupAction(
     return "Too many requests"
   }
 
-  // TODO: Assumes X-Forwarded-For is always included.
   const clientIP = (await headers()).get("X-Forwarded-For")
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return "Too many requests"
@@ -148,7 +143,8 @@ export async function signupAction(
   }
 
   const sessionToken = generateSessionToken()
-  const session = createSession(sessionToken, user.id, sessionFlags)
-  setSessionTokenCookie(sessionToken, (await session).expiresAt)
-  return redirect("/main")
+  const session = await createSession(sessionToken, user.id, sessionFlags)
+  setSessionTokenCookie(sessionToken, session.expiresAt)
+
+  return redirect("/home")
 }
