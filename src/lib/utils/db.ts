@@ -2,23 +2,18 @@ import { getRequestContext } from "@cloudflare/next-on-pages"
 import { drizzle } from "drizzle-orm/d1"
 import * as schema from "@/lib/utils/schema"
 
-export let client: D1Database
-
 /**
  * Cache the database connection in development. This avoids creating a new connection on every HMR
  * update.
  */
-const globalForDb = globalThis as unknown as {
+const globalForDB = globalThis as unknown as {
   client?: D1Database
 }
 
-const createDb = () => {
-  client =
-    globalForDb.client ?? (getRequestContext().env as { DB: D1Database }).DB
+const client = (getRequestContext().env as { DB: D1Database }).DB
 
-  if (process.env.NODE_ENV === "development") globalForDb.client = client
-
-  return drizzle(client, { schema })
+if (process.env.NODE_ENV === "development") {
+  globalForDB.client = client
 }
 
-export default createDb()
+export default drizzle(client, { schema })

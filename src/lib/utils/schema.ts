@@ -10,16 +10,14 @@ import {
 export const users = sqliteTable(
   "users",
   {
-    id: integer("id").primaryKey().notNull(),
+    id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
     email: text("email").notNull(),
     username: text("username").notNull(),
     passwordHash: text("password_hash").notNull(),
     emailVerified: integer("email_verified").notNull().default(0),
     recoveryCode: blob("recovery_code").notNull(),
   },
-  (user) => ({
-    emailIndex: uniqueIndex("email_index").on(user.email),
-  }),
+  (user) => [uniqueIndex("email_index").on(user.email)],
 )
 
 // Sessions table
