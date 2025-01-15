@@ -15,6 +15,13 @@
       "when": 1736965474534,
       "tag": "0001_light_donald_blake",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1736972118916,
+      "tag": "0002_worthless_rhino",
+      "breakpoints": true
     }
   ]
 }

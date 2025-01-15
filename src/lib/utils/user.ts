@@ -8,7 +8,6 @@ import {
 import db from "@/lib/utils/db"
 import { hashPassword } from "@/lib/utils/password"
 import { generateRandomRecoveryCode } from "@/lib/utils/random"
-import { decryptToString, encryptString } from "@/lib/utils/encryption"
 
 export function verifyUsernameInput(username: string): boolean {
   return (
@@ -20,10 +19,9 @@ export async function createUser(
   username: string,
   email: string,
   password: string,
-): Promise<User> {
+): Promise<User | undefined> {
   const passwordHash = await hashPassword(password)
   const recoveryCode = generateRandomRecoveryCode()
-  const encryptedRecoveryCode = await encryptString(recoveryCode)
 
   const result = await db
     .insert(users)
@@ -31,12 +29,12 @@ export async function createUser(
       email: email,
       username: username,
       passwordHash: passwordHash,
-      recoveryCode: encryptedRecoveryCode,
+      recoveryCode: recoveryCode,
     })
     .returning({ id: users.id })
     .get()
 
-  const user: User = {
+  const user = {
     ...result,
     username,
     email,
@@ -104,14 +102,13 @@ export async function getUserRecoverCode(userId: number): Promise<string> {
     throw new Error("Invalid user ID")
   }
 
-  return decryptToString(result.recoveryCode as Uint8Array)
+  return result.recoveryCode
 }
 
 export async function resetUserRecoveryCode(userId: number): Promise<string> {
   const recoveryCode = generateRandomRecoveryCode()
-  const encrypted = encryptString(recoveryCode)
   await db.run(
-    sql`UPDATE user SET recovery_code = ${encrypted} WHERE id = ${userId}`,
+    sql`UPDATE user SET recovery_code = ${recoveryCode} WHERE id = ${userId}`,
   )
   return recoveryCode
 }

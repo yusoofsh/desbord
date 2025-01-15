@@ -8,6 +8,7 @@ import { cookies } from "next/headers"
 // import { cache } from "react"
 import { sql } from "drizzle-orm"
 import db from "@/lib/utils/db"
+import { sessions } from "@/lib/utils/schema"
 
 // export async function validateSessionToken(
 //   token: string,
@@ -119,18 +120,23 @@ export async function createSession(
   userId: number,
   flags: SessionFlags,
 ): Promise<Session> {
-  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
   const session: Session = {
-    id: sessionId,
     userId,
+    id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
     twoFactorVerified: flags.twoFactorVerified,
   }
-  await db.run(
-    sql`
-      INSERT INTO session (id, user_id, expires_at, two_factor_verified) VALUES (${session.id}, ${session.userId}, ${Math.floor(session.expiresAt.getTime() / 1000)}, ${Number(session.twoFactorVerified)})",
-    `,
-  )
+
+  await db
+    .insert(sessions)
+    .values({
+      id: session.id,
+      userId: session.userId,
+      expiresAt: Math.floor(session.expiresAt.getTime() / 1000),
+      twoFactorVerified: Number(session.twoFactorVerified),
+    })
+    .run()
+
   return session
 }
 

@@ -1,9 +1,15 @@
-import SignupForm from "@/lib/components/signup-form"
+"use client"
+
+import AuthForm from "@/lib/components/auth-form"
 import Logo from "@/lib/components/logo"
+import { useSearchParams } from "next/navigation"
 
 export const runtime = "edge"
 
-export default function SignupPage() {
+export default function AuthPage() {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get("mode") === "signin" ? "signin" : "signup"
+
   return (
     <main className="flex items-center justify-center md:h-screen">
       <div className="relative mx-auto flex w-full max-w-[400px] flex-col space-y-2.5 p-4 md:-mt-32">
@@ -12,7 +18,7 @@ export default function SignupPage() {
             <Logo />
           </div>
         </div>
-        <SignupForm />
+        <AuthForm mode={mode} />
       </div>
     </main>
   )

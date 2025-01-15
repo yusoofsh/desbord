@@ -15,7 +15,7 @@ export const users = sqliteTable(
     username: text("username").notNull(),
     passwordHash: text("password_hash").notNull(),
     emailVerified: integer("email_verified").notNull().default(0),
-    recoveryCode: blob("recovery_code").notNull(),
+    recoveryCode: text("recovery_code").notNull(),
   },
   (user) => [uniqueIndex("email_index").on(user.email)],
 )
