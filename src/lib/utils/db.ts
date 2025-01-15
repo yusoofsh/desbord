@@ -13,7 +13,8 @@ const globalForDb = globalThis as unknown as {
 }
 
 const createDb = () => {
-  client = globalForDb.client ?? getRequestContext().env.DB
+  client =
+    globalForDb.client ?? (getRequestContext().env as { DB: D1Database }).DB
 
   if (process.env.NODE_ENV === "development") globalForDb.client = client
 
