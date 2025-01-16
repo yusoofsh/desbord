@@ -11,17 +11,13 @@ const globalForDb = globalThis as unknown as {
   client?: D1Database
 }
 
-function createDbClient() {
-  if (!globalForDb.client) {
-    client = (getRequestContext().env as { DB: D1Database }).DB
+const createDBClient = () => {
+  client =
+    globalForDb.client ?? (getRequestContext().env as { DB: D1Database }).DB
 
-    if (process.env.NODE_ENV === "development") globalForDb.client = client
-  } else {
-    client = globalForDb.client
-  }
+  if (process.env.NODE_ENV === "development") globalForDb.client = client
 
   return drizzle(client, { schema })
 }
 
-const db = createDbClient()
-export default db
+export default createDBClient()
