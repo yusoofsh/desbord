@@ -1,4 +1,4 @@
-import type { Revenue } from "@/lib/utils/definitions"
+import type { Revenue } from "@/lib/utils/definition"
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {

@@ -1,6 +1,6 @@
 "use server"
 
-import type { SessionFlags } from "@/lib/utils/session"
+import type { SessionFlags } from "@/lib/utils/definition"
 import { checkEmailAvailability, verifyEmailInput } from "@/lib/utils/email"
 import {
   verifyPasswordHash,

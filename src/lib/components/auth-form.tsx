@@ -11,15 +11,13 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
+import { useSearchParams } from "next/navigation"
 import { useActionState } from "react"
 
-type AuthMode = "signin" | "signup"
+export default function AuthForm() {
+  const searchParams = useSearchParams()
+  const mode = searchParams.get("mode") === "signin" ? "signin" : "signup"
 
-interface AuthFormProps {
-  mode: AuthMode
-}
-
-export default function AuthForm({ mode }: AuthFormProps) {
   const [state, action, isPending] = useActionState(
     mode === "signin" ? signinAction : signupAction,
     undefined,

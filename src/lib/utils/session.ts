@@ -1,88 +1,119 @@
-// import type { User } from "@/lib/utils/user"
 import {
   encodeBase32LowerCaseNoPadding,
   encodeHexLowerCase,
 } from "@oslojs/encoding"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { cookies } from "next/headers"
-// import { cache } from "react"
-import { sql } from "drizzle-orm"
+import { eq, sql } from "drizzle-orm"
 import db from "@/lib/utils/db"
-import { sessions } from "@/lib/utils/schema"
+import {
+  passkeyCredentials,
+  securityKeyCredentials,
+  sessions,
+  totpCredentials,
+  users,
+} from "@/lib/utils/schema"
+import { cache } from "react"
+import type {
+  Session,
+  SessionValidationResult,
+  User,
+  SessionFlags,
+} from "@/lib/utils/definition"
 
-// export async function validateSessionToken(
-//   token: string,
-// ): Promise<SessionValidationResult> {
-//   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
-//   const row = await db
-//     .run(
-//       sql`
-//       SELECT session.id, session.user_id, session.expires_at, session.two_factor_verified, user.id, user.email, user.username, user.email_verified, IIF(totp_credentials.id IS NOT NULL, 1, 0), IIF(passkey_credential.id IS NOT NULL, 1, 0), IIF(security_key_credential.id IS NOT NULL, 1, 0) FROM session
-//       INNER JOIN user ON session.user_id = user.id
-//       LEFT JOIN totp_credentials ON session.user_id = totp_credentials.user_id
-//       LEFT JOIN passkey_credential ON user.id = passkey_credential.user_id
-//       LEFT JOIN security_key_credential ON user.id = security_key_credential.user_id
-//       WHERE session.id = ?
-//     `,
-//     )
-//     .execute()
+export async function validateSessionToken(
+  token: string,
+): Promise<SessionValidationResult> {
+  const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
 
-//   if (row === null) {
-//     return { session: null, user: null }
-//   }
-//   const session: Session = {
-//     id: row.string(0),
-//     userId: row.number(1),
-//     expiresAt: new Date(row.number(2) * 1000),
-//     twoFactorVerified: Boolean(row.number(3)),
-//   }
-// const user: User = {
-//     id: row.number(4),
-//     email: row.string(5),
-//     username: row.string(6),
-//     emailVerified: Boolean(row.number(7)),
-//     registeredTOTP: Boolean(row.number(8)),
-//     registeredPasskey: Boolean(row.number(9)),
-//     registeredSecurityKey: Boolean(row.number(10)),
-//     registered2FA: false,
-//   }
-//   if (
-//     user.registeredPasskey ||
-//     user.registeredSecurityKey ||
-//     user.registeredTOTP
-//   ) {
-//     user.registered2FA = true
-//   }
-//   if (Date.now() >= session.expiresAt.getTime()) {
-//     await db.run(sql`DELETE FROM session WHERE id = ${sessionId}`)
-//     return { session: null, user: null }
-//   }
-//   if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-//     session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
-//     await db.run(
-//       sql`UPDATE session SET expires_at = ${Math.floor(session.expiresAt.getTime() / 1000)} WHERE session.id = ${sessionId}`,
-//     )
-//   }
-//   return { session, user }
-// }
+  const result = await db
+    .select({
+      sessionId: sessions.id,
+      expiresAt: sessions.expiresAt,
+      twoFactorVerified: sessions.twoFactorVerified,
+      userId: users.id,
+      email: users.email,
+      username: users.username,
+      emailVerified: users.emailVerified,
+      hasTotp: sql`CASE WHEN ${totpCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
+      hasPasskey: sql`CASE WHEN ${passkeyCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
+      hasSecurityKey: sql`CASE WHEN ${securityKeyCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
+    })
+    .from(sessions)
+    .innerJoin(users, eq(sessions.userId, users.id))
+    .leftJoin(totpCredentials, eq(sessions.userId, totpCredentials.userId))
+    .leftJoin(passkeyCredentials, eq(users.id, passkeyCredentials.userId))
+    .leftJoin(
+      securityKeyCredentials,
+      eq(users.id, securityKeyCredentials.userId),
+    )
+    .where(eq(sessions.id, sessionId))
+    .get()
 
-// export const getCurrentSession = cache(
-//   async (): Promise<SessionValidationResult> => {
-//     const token = (await cookies()).get("session")?.value ?? null
-//     if (token === null) {
-//       return { session: null, user: null }
-//     }
-//     const result = validateSessionToken(token)
-//     return result
-//   },
-// )
+  if (!result) {
+    return { session: null, user: null }
+  }
+
+  const session: Session = {
+    id: result.sessionId,
+    userId: result.userId,
+    expiresAt: new Date(result.expiresAt * 1000),
+    twoFactorVerified: Boolean(result.twoFactorVerified),
+  }
+
+  const user: User = {
+    id: result.userId,
+    email: result.email,
+    username: result.username,
+    emailVerified: Boolean(result.emailVerified),
+    registeredTOTP: Boolean(result.hasTotp),
+    registeredPasskey: Boolean(result.hasPasskey),
+    registeredSecurityKey: Boolean(result.hasSecurityKey),
+    registered2FA: false,
+  }
+
+  if (
+    user.registeredPasskey ||
+    user.registeredSecurityKey ||
+    user.registeredTOTP
+  ) {
+    user.registered2FA = true
+  }
+
+  if (Date.now() >= session.expiresAt.getTime()) {
+    await db.delete(sessions).where(eq(sessions.id, sessionId)).run()
+    return { session: null, user: null }
+  }
+
+  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
+    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+    await db
+      .update(sessions)
+      .set({ expiresAt: Math.floor(session.expiresAt.getTime() / 1000) })
+      .where(eq(sessions.id, sessionId))
+      .run()
+  }
+
+  return { session, user }
+}
+
+export const getCurrentSession = cache(
+  async (): Promise<SessionValidationResult> => {
+    const token = (await cookies()).get("session")?.value ?? null
+    if (token === null) {
+      return { session: null, user: null }
+    }
+
+    return validateSessionToken(token)
+  },
+)
 
 export async function invalidateSession(sessionId: string): Promise<void> {
-  await db.run(sql`DELETE FROM session WHERE id = ${sessionId}`)
+  await db.delete(sessions).where(eq(sessions.id, sessionId)).run()
 }
 
 export async function invalidateUserSessions(userId: number): Promise<void> {
-  await db.run(sql`DELETE FROM session WHERE user_id = ${userId}`)
+  await db.delete(sessions).where(eq(sessions.userId, userId)).run()
 }
 
 export async function setSessionTokenCookie(
@@ -143,21 +174,9 @@ export async function createSession(
 export async function setSessionAs2FAVerified(
   sessionId: string,
 ): Promise<void> {
-  await db.run(
-    sql`UPDATE session SET two_factor_verified = 1 WHERE id = ${sessionId}`,
-  )
+  await db
+    .update(sessions)
+    .set({ twoFactorVerified: 1 })
+    .where(eq(sessions.id, sessionId))
+    .run()
 }
-
-export interface SessionFlags {
-  twoFactorVerified: boolean
-}
-
-export interface Session extends SessionFlags {
-  id: string
-  expiresAt: Date
-  userId: number
-}
-
-// type SessionValidationResult =
-//   | { session: Session; user: User }
-//   | { session: null; user: null }

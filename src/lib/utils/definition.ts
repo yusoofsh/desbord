@@ -2,11 +2,16 @@
 // It describes the shape of the data, and what data type each property should accept.
 // For simplicity of teaching, we're manually defining these types.
 // However, these types are generated automatically if you're using an ORM such as Prisma.
+
 export type User = {
-  id: string
-  name: string
+  id: number
   email: string
-  password: string
+  username: string
+  emailVerified: boolean
+  registeredTOTP: boolean
+  registeredSecurityKey: boolean
+  registeredPasskey: boolean
+  registered2FA: boolean
 }
 
 export type Customer = {
@@ -85,4 +90,33 @@ export type InvoiceForm = {
   customer_id: string
   amount: number
   status: "pending" | "paid"
+}
+
+export type SessionFlags = {
+  twoFactorVerified: boolean
+}
+
+export type Session = SessionFlags & {
+  id: string
+  expiresAt: Date
+  userId: number
+}
+
+export type SessionValidationResult =
+  | { session: Session; user: User }
+  | { session: null; user: null }
+
+export type RefillBucket = {
+  count: number
+  refilledAt: number
+}
+
+export type ExpiringBucket = {
+  count: number
+  createdAt: number
+}
+
+export type ThrottlingCounter = {
+  timeout: number
+  updatedAt: number
 }

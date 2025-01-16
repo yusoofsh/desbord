@@ -1,14 +1,16 @@
-"use client"
-
 import AuthForm from "@/lib/components/auth-form"
 import Logo from "@/lib/components/logo"
-import { useSearchParams } from "next/navigation"
+import { globalGETRateLimit } from "@/lib/utils/request"
+import { getCurrentSession } from "@/lib/utils/session"
+import { redirect } from "next/navigation"
 
 export const runtime = "edge"
 
-export default function AuthPage() {
-  const searchParams = useSearchParams()
-  const mode = searchParams.get("mode") === "signin" ? "signin" : "signup"
+export default async function AuthPage() {
+  if (!globalGETRateLimit()) return "Too many requests"
+
+  const { session } = await getCurrentSession()
+  if (session) return redirect("/home")
 
   return (
     <main className="flex items-center justify-center md:h-screen">
@@ -18,7 +20,7 @@ export default function AuthPage() {
             <Logo />
           </div>
         </div>
-        <AuthForm mode={mode} />
+        <AuthForm />
       </div>
     </main>
   )

@@ -8,6 +8,7 @@ import {
 import db from "@/lib/utils/db"
 import { hashPassword } from "@/lib/utils/password"
 import { generateRandomRecoveryCode } from "@/lib/utils/random"
+import type { User } from "@/lib/utils/definition"
 
 export function verifyUsernameInput(username: string): boolean {
   return (
@@ -156,15 +157,4 @@ export async function getUserFromEmail(email: string): Promise<User | null> {
   }
 
   return user
-}
-
-export interface User {
-  id: number
-  email: string
-  username: string
-  emailVerified: boolean
-  registeredTOTP: boolean
-  registeredSecurityKey: boolean
-  registeredPasskey: boolean
-  registered2FA: boolean
 }
