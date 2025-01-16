@@ -14,14 +14,11 @@ const getLocalD1 = () => {
       throw new Error(`.sqlite file not found in ${basePath}`)
     }
 
-    const url = path.resolve(basePath, dbFile)
-    return url
+    return path.resolve(basePath, dbFile)
   } catch (err) {
-    console.log(`Error  ${err}`)
+    console.log(`Error ${err}`)
   }
 }
-
-const isProd = () => process.env.NODE_ENV === "production"
 
 const getCredentials = () => {
   const prod = {
@@ -38,7 +35,8 @@ const getCredentials = () => {
       url: getLocalD1(),
     },
   }
-  return isProd() ? prod : dev
+
+  return process.env.NODE_ENV === "production" ? prod : dev
 }
 
 const drizzleConfig = {
@@ -47,5 +45,4 @@ const drizzleConfig = {
   out: ".drizzle/migrations",
   ...getCredentials(),
 } satisfies Config
-
 export default drizzleConfig
