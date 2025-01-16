@@ -41,9 +41,11 @@ const getCredentials = () => {
   return isProd() ? prod : dev
 }
 
-export default {
+const drizzleConfig = {
   dialect: "sqlite",
   schema: "src/lib/utils/schema.ts",
   out: ".drizzle/migrations",
   ...getCredentials(),
 } satisfies Config
+
+export default drizzleConfig
