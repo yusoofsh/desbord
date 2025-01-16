@@ -9,7 +9,10 @@ import {
 import { RefillingTokenBucket, Throttler } from "@/lib/utils/rate-limit"
 import {
   createSession,
+  deleteSessionTokenCookie,
   generateSessionToken,
+  getCurrentSession,
+  invalidateSession,
   setSessionTokenCookie,
 } from "@/lib/utils/session"
 import {
@@ -147,4 +150,20 @@ export async function signupAction(
   setSessionTokenCookie(sessionToken, session.expiresAt)
 
   return redirect("/home")
+}
+
+export async function signoutAction(): Promise<string> {
+  if (!globalPOSTRateLimit()) {
+    return "Too many requests"
+  }
+
+  const { session } = await getCurrentSession()
+  if (session === null) {
+    return "Not authenticated"
+  }
+
+  invalidateSession(session.id)
+  deleteSessionTokenCookie()
+
+  return redirect("/auth?mode=signin")
 }
