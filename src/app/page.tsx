@@ -5,13 +5,10 @@ import { lusitana } from "@/lib/utils/fonts"
 import Image from "next/image"
 import { getCurrentSession } from "@/lib/utils/session"
 import { redirect } from "next/navigation"
-import { globalGETRateLimit } from "@/lib/utils/request"
 
 export const runtime = "edge"
 
 export default async function RootPage() {
-  if (!globalGETRateLimit()) return "Too many requests"
-
   const { session } = await getCurrentSession()
   if (session) redirect("/home")
 

@@ -6,7 +6,6 @@ import {
   verifyPasswordHash,
   verifyPasswordStrength,
 } from "@/lib/utils/password"
-import { RefillingTokenBucket, Throttler } from "@/lib/utils/rate-limit"
 import {
   createSession,
   deleteSessionTokenCookie,
@@ -21,26 +20,12 @@ import {
   getUserPasswordHash,
   verifyUsernameInput,
 } from "@/lib/utils/user"
-import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { globalPOSTRateLimit } from "@/lib/utils/request"
-
-const throttler = new Throttler<number>([1, 2, 4, 8, 16, 30, 60, 180, 300])
-const ipBucket = new RefillingTokenBucket<string>(20, 1)
 
 export async function signinAction(
   _prevState: string | undefined,
   formData: FormData,
 ): Promise<string> {
-  if (!globalPOSTRateLimit()) {
-    return "Too many requests"
-  }
-
-  const clientIP = (await headers()).get("X-Forwarded-For")
-  if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-    return "Too many requests"
-  }
-
   const email = formData.get("email")
   const password = formData.get("password")
 
@@ -59,20 +44,11 @@ export async function signinAction(
     return "Account does not exist"
   }
 
-  if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
-    return "Too many requests"
-  }
-  if (!throttler.consume(user.id)) {
-    return "Too many requests"
-  }
-
   const passwordHash = await getUserPasswordHash(user.id)
   const validPassword = await verifyPasswordHash(passwordHash, password)
   if (!validPassword) {
     return "Invalid password"
   }
-
-  throttler.reset(user.id)
 
   const sessionFlags: SessionFlags = {
     twoFactorVerified: false,
@@ -80,7 +56,7 @@ export async function signinAction(
 
   const sessionToken = generateSessionToken()
   const session = await createSession(sessionToken, user.id, sessionFlags)
-  setSessionTokenCookie(sessionToken, session.expiresAt)
+  await setSessionTokenCookie(sessionToken, session.expiresAt)
 
   return redirect("/home")
 }
@@ -89,15 +65,6 @@ export async function signupAction(
   _prevState: string | undefined,
   formData: FormData,
 ): Promise<string> {
-  if (!globalPOSTRateLimit()) {
-    return "Too many requests"
-  }
-
-  const clientIP = (await headers()).get("X-Forwarded-For")
-  if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-    return "Too many requests"
-  }
-
   const email = formData.get("email")
   const username = formData.get("username")
   const password = formData.get("password")
@@ -132,10 +99,6 @@ export async function signupAction(
     return "Weak password"
   }
 
-  if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
-    return "Too many requests"
-  }
-
   const user = await createUser(username, email, password)
   if (!user) {
     return "Something went wrong"
@@ -153,17 +116,13 @@ export async function signupAction(
 }
 
 export async function signoutAction(): Promise<string> {
-  if (!globalPOSTRateLimit()) {
-    return "Too many requests"
-  }
-
   const { session } = await getCurrentSession()
   if (session === null) {
     return "Not authenticated"
   }
 
-  invalidateSession(session.id)
-  deleteSessionTokenCookie()
+  await invalidateSession(session.id)
+  await deleteSessionTokenCookie()
 
   return redirect("/auth?mode=signin")
 }

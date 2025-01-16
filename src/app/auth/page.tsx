@@ -1,14 +1,11 @@
 import AuthForm from "@/lib/components/auth-form"
 import Logo from "@/lib/components/logo"
-import { globalGETRateLimit } from "@/lib/utils/request"
 import { getCurrentSession } from "@/lib/utils/session"
 import { redirect } from "next/navigation"
 
 export const runtime = "edge"
 
 export default async function AuthPage() {
-  if (!globalGETRateLimit()) return "Too many requests"
-
   const { session } = await getCurrentSession()
   if (session) return redirect("/home")
 

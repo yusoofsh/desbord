@@ -7,7 +7,6 @@ import {
 import LatestInvoices from "@/lib/components/latest-invoices"
 import RevenueChart from "@/lib/components/revenue-chart"
 import { lusitana } from "@/lib/utils/fonts"
-import { globalGETRateLimit } from "@/lib/utils/request"
 import { getCurrentSession } from "@/lib/utils/session"
 import { redirect } from "next/navigation"
 import { Suspense } from "react"
@@ -15,8 +14,6 @@ import { Suspense } from "react"
 export const runtime = "edge"
 
 export default async function HomePage() {
-  if (!globalGETRateLimit()) return "Too many requests"
-
   const { session } = await getCurrentSession()
   if (!session) redirect("/auth?mode=signin")
 
