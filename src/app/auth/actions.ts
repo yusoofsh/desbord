@@ -25,7 +25,7 @@ import { redirect } from "next/navigation"
 export async function signinAction(
   _prevState: string | undefined,
   formData: FormData,
-): Promise<string> {
+) {
   const email = formData.get("email")
   const password = formData.get("password")
 
@@ -64,7 +64,7 @@ export async function signinAction(
 export async function signupAction(
   _prevState: string | undefined,
   formData: FormData,
-): Promise<string> {
+) {
   const email = formData.get("email")
   const username = formData.get("username")
   const password = formData.get("password")
@@ -115,7 +115,7 @@ export async function signupAction(
   return redirect("/home")
 }
 
-export async function signoutAction(): Promise<string> {
+export async function signoutAction() {
   const { session } = await getCurrentSession()
   if (session === null) {
     return "Not authenticated"

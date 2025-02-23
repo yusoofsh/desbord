@@ -14,16 +14,9 @@ import {
   users,
 } from "@/lib/utils/schema"
 import { cache } from "react"
-import type {
-  Session,
-  SessionValidationResult,
-  User,
-  SessionFlags,
-} from "@/lib/utils/definition"
+import type { Session, User, SessionFlags } from "@/lib/utils/definition"
 
-export async function validateSessionToken(
-  token: string,
-): Promise<SessionValidationResult> {
+export async function validateSessionToken(token: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
 
   const result = await db
@@ -97,29 +90,24 @@ export async function validateSessionToken(
   return { session, user }
 }
 
-export const getCurrentSession = cache(
-  async (): Promise<SessionValidationResult> => {
-    const token = (await cookies()).get("session")?.value ?? null
-    if (token === null) {
-      return { session: null, user: null }
-    }
+export const getCurrentSession = cache(async () => {
+  const token = (await cookies()).get("session")?.value ?? null
+  if (token === null) {
+    return { session: null, user: null }
+  }
 
-    return validateSessionToken(token)
-  },
-)
+  return validateSessionToken(token)
+})
 
-export async function invalidateSession(sessionId: string): Promise<void> {
+export async function invalidateSession(sessionId: string) {
   await db.delete(sessions).where(eq(sessions.id, sessionId)).run()
 }
 
-export async function invalidateUserSessions(userId: number): Promise<void> {
+export async function invalidateUserSessions(userId: number) {
   await db.delete(sessions).where(eq(sessions.userId, userId)).run()
 }
 
-export async function setSessionTokenCookie(
-  token: string,
-  expiresAt: Date,
-): Promise<void> {
+export async function setSessionTokenCookie(token: string, expiresAt: Date) {
   ;(await cookies()).set("session", token, {
     httpOnly: true,
     path: "/",
@@ -129,7 +117,7 @@ export async function setSessionTokenCookie(
   })
 }
 
-export async function deleteSessionTokenCookie(): Promise<void> {
+export async function deleteSessionTokenCookie() {
   ;(await cookies()).set("session", "", {
     httpOnly: true,
     path: "/",
@@ -139,7 +127,7 @@ export async function deleteSessionTokenCookie(): Promise<void> {
   })
 }
 
-export function generateSessionToken(): string {
+export function generateSessionToken() {
   const tokenBytes = new Uint8Array(20)
   crypto.getRandomValues(tokenBytes)
   const token = encodeBase32LowerCaseNoPadding(tokenBytes)
@@ -150,7 +138,7 @@ export async function createSession(
   token: string,
   userId: number,
   flags: SessionFlags,
-): Promise<Session> {
+) {
   const session: Session = {
     userId,
     id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
@@ -171,9 +159,7 @@ export async function createSession(
   return session
 }
 
-export async function setSessionAs2FAVerified(
-  sessionId: string,
-): Promise<void> {
+export async function setSessionAs2FAVerified(sessionId: string) {
   await db
     .update(sessions)
     .set({ twoFactorVerified: 1 })

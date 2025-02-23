@@ -1,8 +1,5 @@
 // PBKDF2 Hashing with Web Crypto API
-async function hashPasswordPBKDF2(
-  password: string,
-  salt: Uint8Array,
-): Promise<string> {
+async function hashPasswordPBKDF2(password: string, salt: Uint8Array) {
   const enc = new TextEncoder()
   const keyMaterial = await crypto.subtle.importKey(
     "raw",
@@ -28,7 +25,7 @@ async function hashPasswordPBKDF2(
     .join("")
 }
 
-export async function hashPassword(password: string): Promise<string> {
+export async function hashPassword(password: string) {
   const salt = crypto.getRandomValues(new Uint8Array(16)) // 16-byte random salt
   const hashed = await hashPasswordPBKDF2(password, salt)
   const saltHex = Array.from(salt)
@@ -37,10 +34,7 @@ export async function hashPassword(password: string): Promise<string> {
   return `${saltHex}:${hashed}`
 }
 
-export async function verifyPasswordHash(
-  storedHash: string,
-  password: string,
-): Promise<boolean> {
+export async function verifyPasswordHash(storedHash: string, password: string) {
   const [saltHex, hash] = storedHash.split(":")
 
   if (!saltHex) {
@@ -59,16 +53,14 @@ export async function verifyPasswordHash(
 }
 
 // SHA-1 hashing using Web Crypto API
-async function sha1(data: Uint8Array): Promise<string> {
+async function sha1(data: Uint8Array) {
   const hashBuffer = await crypto.subtle.digest("SHA-1", data)
   return Array.from(new Uint8Array(hashBuffer))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("")
 }
 
-export async function verifyPasswordStrength(
-  password: string,
-): Promise<boolean> {
+export async function verifyPasswordStrength(password: string) {
   if (password.length < 8 || password.length > 255) {
     return false
   }

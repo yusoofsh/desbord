@@ -10,7 +10,7 @@ import { hashPassword } from "@/lib/utils/password"
 import { generateRandomRecoveryCode } from "@/lib/utils/random"
 import type { User } from "@/lib/utils/definition"
 
-export function verifyUsernameInput(username: string): boolean {
+export function verifyUsernameInput(username: string) {
   return (
     username.length > 3 && username.length < 32 && username.trim() === username
   )
@@ -20,7 +20,7 @@ export async function createUser(
   username: string,
   email: string,
   password: string,
-): Promise<User | undefined> {
+) {
   const passwordHash = await hashPassword(password)
   const recoveryCode = generateRandomRecoveryCode()
 
@@ -49,10 +49,7 @@ export async function createUser(
   return user
 }
 
-export async function updateUserPassword(
-  userId: number,
-  password: string,
-): Promise<void> {
+export async function updateUserPassword(userId: number, password: string) {
   const passwordHash = await hashPassword(password)
   await db.run(
     sql`UPDATE user SET password_hash = ${passwordHash} WHERE id = ${userId}`,
@@ -62,23 +59,22 @@ export async function updateUserPassword(
 export async function updateUserEmailAndSetEmailAsVerified(
   userId: number,
   email: string,
-): Promise<void> {
+) {
   await db.run(
     sql`UPDATE user SET email = ${email}, email_verified = 1 WHERE id = ${userId}`,
   )
 }
 
-// export async function setUserAsEmailVerifiedIfEmailMatches(
-//   userId: number,
-//   email: string,
-// ): Promise<boolean> {
-//   const result = await db.run(
-//     sql`UPDATE user SET email_verified = 1 WHERE id = ${userId} AND email = ${email}`,
-//   )
-//   return result.changes > 0
-// }
+export async function setUserAsEmailVerifiedIfEmailMatches(
+  userId: number,
+  email: string,
+) {
+  await db.run(
+    sql`UPDATE user SET email_verified = 1 WHERE id = ${userId} AND email = ${email}`,
+  )
+}
 
-export async function getUserPasswordHash(userId: number): Promise<string> {
+export async function getUserPasswordHash(userId: number) {
   const result = await db
     .select({ passwordHash: users.passwordHash })
     .from(users)
@@ -92,7 +88,7 @@ export async function getUserPasswordHash(userId: number): Promise<string> {
   return result.passwordHash
 }
 
-export async function getUserRecoverCode(userId: number): Promise<string> {
+export async function getUserRecoverCode(userId: number) {
   const result = await db
     .select({ recoveryCode: users.recoveryCode })
     .from(users)
@@ -106,7 +102,7 @@ export async function getUserRecoverCode(userId: number): Promise<string> {
   return result.recoveryCode
 }
 
-export async function resetUserRecoveryCode(userId: number): Promise<string> {
+export async function resetUserRecoveryCode(userId: number) {
   const recoveryCode = generateRandomRecoveryCode()
   await db.run(
     sql`UPDATE user SET recovery_code = ${recoveryCode} WHERE id = ${userId}`,
@@ -114,7 +110,7 @@ export async function resetUserRecoveryCode(userId: number): Promise<string> {
   return recoveryCode
 }
 
-export async function getUserFromEmail(email: string): Promise<User | null> {
+export async function getUserFromEmail(email: string) {
   const result = await db
     .select({
       id: users.id,
