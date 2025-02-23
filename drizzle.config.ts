@@ -1,19 +1,21 @@
 import type { Config } from "drizzle-kit"
 
-import fs from "fs"
-import path from "path"
+import { existsSync, readdirSync } from "fs"
+import { resolve } from "path"
 
 const getLocalD1 = () => {
-  const basePath = path.resolve(".wrangler")
-  const dbFile = fs
-    .readdirSync(basePath, { encoding: "utf-8", recursive: true })
-    .find((f) => f.endsWith(".sqlite"))
+  const basePath = resolve(".wrangler")
 
-  if (!dbFile) {
-    throw new Error(`.sqlite file not found in ${basePath}`)
-  }
+  if (!existsSync(basePath)) return
 
-  return path.resolve(basePath, dbFile)
+  const dbFile = readdirSync(basePath, {
+    encoding: "utf-8",
+    recursive: true,
+  }).find((file) => file.endsWith(".sqlite"))
+
+  if (!dbFile) return
+
+  return resolve(basePath, dbFile)
 }
 
 const getCredentials = () => {
