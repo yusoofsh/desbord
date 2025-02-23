@@ -1,9 +1,47 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "82835483-1caf-4c4c-9910-e3856b227ad7",
+  "id": "61855797-df85-4ad5-bb3e-5117320c74e1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "customers": {
+      "name": "customers",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
     "email_verification_requests": {
       "name": "email_verification_requests",
       "columns": {
@@ -59,8 +97,63 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "passkey_credentials": {
-      "name": "passkey_credentials",
+    "invoices": {
+      "name": "invoices",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "amount": {
+          "name": "amount",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "date": {
+          "name": "date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "invoices_customer_id_customers_id_fk": {
+          "name": "invoices_customer_id_customers_id_fk",
+          "tableFrom": "invoices",
+          "tableTo": "customers",
+          "columnsFrom": ["customer_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "passkeys": {
+      "name": "passkeys",
       "columns": {
         "id": {
           "name": "id",
@@ -100,9 +193,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "passkey_credentials_user_id_users_id_fk": {
-          "name": "passkey_credentials_user_id_users_id_fk",
-          "tableFrom": "passkey_credentials",
+        "passkeys_user_id_users_id_fk": {
+          "name": "passkeys_user_id_users_id_fk",
+          "tableFrom": "passkeys",
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -158,7 +251,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         },
         "two_factor_verified": {
           "name": "two_factor_verified",
@@ -166,7 +259,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         }
       },
       "indexes": {},
@@ -185,8 +278,32 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "security_key_credentials": {
-      "name": "security_key_credentials",
+    "revenues": {
+      "name": "revenues",
+      "columns": {
+        "month": {
+          "name": "month",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "revenue": {
+          "name": "revenue",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "security_keys": {
+      "name": "security_keys",
       "columns": {
         "id": {
           "name": "id",
@@ -226,9 +343,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "security_key_credentials_user_id_users_id_fk": {
-          "name": "security_key_credentials_user_id_users_id_fk",
-          "tableFrom": "security_key_credentials",
+        "security_keys_user_id_users_id_fk": {
+          "name": "security_keys_user_id_users_id_fk",
+          "tableFrom": "security_keys",
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -270,7 +387,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         }
       },
       "indexes": {},
@@ -289,8 +406,8 @@
       "uniqueConstraints": {},
       "checkConstraints": {}
     },
-    "totp_credentials": {
-      "name": "totp_credentials",
+    "totps": {
+      "name": "totps",
       "columns": {
         "id": {
           "name": "id",
@@ -315,16 +432,16 @@
         }
       },
       "indexes": {
-        "totp_credentials_user_id_unique": {
-          "name": "totp_credentials_user_id_unique",
+        "totps_user_id_unique": {
+          "name": "totps_user_id_unique",
           "columns": ["user_id"],
           "isUnique": true
         }
       },
       "foreignKeys": {
-        "totp_credentials_user_id_users_id_fk": {
-          "name": "totp_credentials_user_id_users_id_fk",
-          "tableFrom": "totp_credentials",
+        "totps_user_id_users_id_fk": {
+          "name": "totps_user_id_users_id_fk",
+          "tableFrom": "totps",
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -344,7 +461,7 @@
           "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "email": {
           "name": "email",
@@ -373,11 +490,11 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": 0
+          "default": false
         },
         "recovery_code": {
           "name": "recovery_code",
-          "type": "blob",
+          "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false

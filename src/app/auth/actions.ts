@@ -1,6 +1,5 @@
 "use server"
 
-import type { SessionFlags } from "@/lib/utils/definition"
 import { checkEmailAvailability, verifyEmailInput } from "@/lib/utils/email"
 import {
   verifyPasswordHash,
@@ -40,7 +39,7 @@ export async function signinAction(
   }
 
   const user = await getUserFromEmail(email)
-  if (user === null) {
+  if (!user) {
     return "Account does not exist"
   }
 
@@ -50,7 +49,7 @@ export async function signinAction(
     return "Invalid password"
   }
 
-  const sessionFlags: SessionFlags = {
+  const sessionFlags = {
     twoFactorVerified: false,
   }
 
@@ -104,7 +103,7 @@ export async function signupAction(
     return "Something went wrong"
   }
 
-  const sessionFlags: SessionFlags = {
+  const sessionFlags = {
     twoFactorVerified: false,
   }
 
@@ -116,12 +115,10 @@ export async function signupAction(
 }
 
 export async function signoutAction() {
-  const { session } = await getCurrentSession()
-  if (session === null) {
-    return "Not authenticated"
-  }
+  const session = await getCurrentSession()
+  if (!session) return "Not authenticated"
 
-  await invalidateSession(session.id)
+  await invalidateSession(session.sessionId)
   await deleteSessionTokenCookie()
 
   return redirect("/auth?mode=signin")

@@ -6,7 +6,6 @@ import {
   uniqueIndex,
 } from "drizzle-orm/sqlite-core"
 
-// Users table
 export const users = sqliteTable(
   "users",
   {
@@ -14,23 +13,25 @@ export const users = sqliteTable(
     email: text("email").notNull(),
     username: text("username").notNull(),
     passwordHash: text("password_hash").notNull(),
-    emailVerified: integer("email_verified").notNull().default(0),
+    emailVerified: integer("email_verified", { mode: "boolean" })
+      .notNull()
+      .default(false),
     recoveryCode: text("recovery_code").notNull(),
   },
   (user) => [uniqueIndex("email_index").on(user.email)],
 )
 
-// Sessions table
 export const sessions = sqliteTable("sessions", {
   id: text("id").primaryKey().notNull(),
   userId: integer("user_id")
     .notNull()
     .references(() => users.id),
   expiresAt: integer("expires_at").notNull(),
-  twoFactorVerified: integer("two_factor_verified").notNull().default(0),
+  twoFactorVerified: integer("two_factor_verified", { mode: "boolean" })
+    .notNull()
+    .default(false),
 })
 
-// Email Verification Requests table
 export const emailVerificationRequests = sqliteTable(
   "email_verification_requests",
   {
@@ -44,7 +45,6 @@ export const emailVerificationRequests = sqliteTable(
   },
 )
 
-// Password Reset Sessions table
 export const passwordResetSessions = sqliteTable("password_reset_sessions", {
   id: text("id").primaryKey().notNull(),
   userId: integer("user_id")
@@ -53,12 +53,15 @@ export const passwordResetSessions = sqliteTable("password_reset_sessions", {
   email: text("email").notNull(),
   code: text("code").notNull(),
   expiresAt: integer("expires_at").notNull(),
-  emailVerified: integer("email_verified").notNull().default(0),
-  twoFactorVerified: integer("two_factor_verified").notNull().default(0),
+  emailVerified: integer("email_verified", { mode: "boolean" })
+    .notNull()
+    .default(false),
+  twoFactorVerified: integer("two_factor_verified", { mode: "boolean" })
+    .notNull()
+    .default(false),
 })
 
-// TOTP Credentials table
-export const totpCredentials = sqliteTable("totp_credentials", {
+export const totps = sqliteTable("totps", {
   id: integer("id").primaryKey().notNull(),
   userId: integer("user_id")
     .notNull()
@@ -67,8 +70,7 @@ export const totpCredentials = sqliteTable("totp_credentials", {
   key: blob("key").notNull(),
 })
 
-// Passkey Credentials table
-export const passkeyCredentials = sqliteTable("passkey_credentials", {
+export const passkeys = sqliteTable("passkeys", {
   id: blob("id").primaryKey().notNull(),
   userId: integer("user_id")
     .notNull()
@@ -78,8 +80,7 @@ export const passkeyCredentials = sqliteTable("passkey_credentials", {
   publicKey: blob("public_key").notNull(),
 })
 
-// Security Key Credentials table
-export const securityKeyCredentials = sqliteTable("security_key_credentials", {
+export const securityKeys = sqliteTable("security_keys", {
   id: blob("id").primaryKey().notNull(),
   userId: integer("user_id")
     .notNull()
@@ -89,27 +90,31 @@ export const securityKeyCredentials = sqliteTable("security_key_credentials", {
   publicKey: blob("public_key").notNull(),
 })
 
-// Revenue table
-export const revenue = sqliteTable("revenue", {
+export const revenues = sqliteTable("revenues", {
   month: text("month").notNull(),
   revenue: integer("revenue").notNull(),
 })
+export type Revenue = typeof revenues.$inferSelect
 
-// Customers table
 export const customers = sqliteTable("customers", {
   id: text("id").primaryKey().notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  image_url: text("image_url"),
+  imageUrl: text("image_url"),
 })
 
-// Invoices table
 export const invoices = sqliteTable("invoices", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-  customer_id: text("customer_id")
+  customerId: text("customer_id")
     .notNull()
     .references(() => customers.id),
   amount: integer("amount").notNull(),
   status: text("status").notNull(),
   date: text("date").notNull(),
+})
+
+export const metadata = sqliteTable("metadata", {
+  key: text("key").primaryKey().notNull(),
+  value: text("value").notNull(),
+  description: text("description"),
 })

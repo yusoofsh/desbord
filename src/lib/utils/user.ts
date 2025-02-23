@@ -1,14 +1,8 @@
-import { eq, sql } from "drizzle-orm"
-import {
-  passkeyCredentials,
-  securityKeyCredentials,
-  totpCredentials,
-  users,
-} from "@/lib/utils/schema"
+import { and, eq, sql } from "drizzle-orm"
+import { passkeys, securityKeys, totps, users } from "@/lib/utils/schema"
 import db from "@/lib/utils/db"
 import { hashPassword } from "@/lib/utils/password"
 import { generateRandomRecoveryCode } from "@/lib/utils/random"
-import type { User } from "@/lib/utils/definition"
 
 export function verifyUsernameInput(username: string) {
   return (
@@ -27,10 +21,10 @@ export async function createUser(
   const result = await db
     .insert(users)
     .values({
-      email: email,
-      username: username,
-      passwordHash: passwordHash,
-      recoveryCode: recoveryCode,
+      email,
+      username,
+      passwordHash,
+      recoveryCode,
     })
     .returning({ id: users.id })
     .get()
@@ -50,28 +44,30 @@ export async function createUser(
 }
 
 export async function updateUserPassword(userId: number, password: string) {
-  const passwordHash = await hashPassword(password)
-  await db.run(
-    sql`UPDATE user SET password_hash = ${passwordHash} WHERE id = ${userId}`,
-  )
+  await db
+    .update(users)
+    .set({ passwordHash: await hashPassword(password) })
+    .where(eq(users.id, userId))
 }
 
 export async function updateUserEmailAndSetEmailAsVerified(
   userId: number,
   email: string,
 ) {
-  await db.run(
-    sql`UPDATE user SET email = ${email}, email_verified = 1 WHERE id = ${userId}`,
-  )
+  await db
+    .update(users)
+    .set({ email, emailVerified: true })
+    .where(eq(users.id, userId))
 }
 
 export async function setUserAsEmailVerifiedIfEmailMatches(
   userId: number,
   email: string,
 ) {
-  await db.run(
-    sql`UPDATE user SET email_verified = 1 WHERE id = ${userId} AND email = ${email}`,
-  )
+  await db
+    .update(users)
+    .set({ emailVerified: true })
+    .where(and(eq(users.id, userId), eq(users.email, email)))
 }
 
 export async function getUserPasswordHash(userId: number) {
@@ -104,53 +100,23 @@ export async function getUserRecoverCode(userId: number) {
 
 export async function resetUserRecoveryCode(userId: number) {
   const recoveryCode = generateRandomRecoveryCode()
-  await db.run(
-    sql`UPDATE user SET recovery_code = ${recoveryCode} WHERE id = ${userId}`,
-  )
+  await db.update(users).set({ recoveryCode }).where(eq(users.id, userId))
   return recoveryCode
 }
 
 export async function getUserFromEmail(email: string) {
-  const result = await db
+  return db
     .select({
       id: users.id,
       email: users.email,
       username: users.username,
       emailVerified: users.emailVerified,
-      hasTotp: totpCredentials.id,
-      hasPasskey: passkeyCredentials.id,
-      hasSecurityKey: securityKeyCredentials.id,
+      registered2FA: sql`CASE WHEN ${totps.id} IS NOT NULL OR ${passkeys.id} IS NOT NULL OR ${securityKeys.id} IS NOT NULL THEN 1 ELSE 0 END`,
     })
     .from(users)
-    .leftJoin(totpCredentials, eq(users.id, totpCredentials.userId))
-    .leftJoin(passkeyCredentials, eq(users.id, passkeyCredentials.userId))
-    .leftJoin(
-      securityKeyCredentials,
-      eq(users.id, securityKeyCredentials.userId),
-    )
+    .leftJoin(totps, eq(users.id, totps.userId))
+    .leftJoin(passkeys, eq(users.id, passkeys.userId))
+    .leftJoin(securityKeys, eq(users.id, securityKeys.userId))
     .where(eq(users.email, email))
     .get()
-
-  if (result === undefined) {
-    return null
-  }
-
-  const user: User = {
-    ...result,
-    emailVerified: Boolean(result.emailVerified),
-    registeredTOTP: Boolean(result.hasTotp),
-    registeredPasskey: Boolean(result.hasPasskey),
-    registeredSecurityKey: Boolean(result.hasSecurityKey),
-    registered2FA: false,
-  }
-
-  if (
-    user.registeredPasskey ||
-    user.registeredSecurityKey ||
-    user.registeredTOTP
-  ) {
-    user.registered2FA = true
-  }
-
-  return user
 }

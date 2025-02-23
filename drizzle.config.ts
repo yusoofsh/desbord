@@ -4,20 +4,16 @@ import fs from "fs"
 import path from "path"
 
 const getLocalD1 = () => {
-  try {
-    const basePath = path.resolve(".wrangler")
-    const dbFile = fs
-      .readdirSync(basePath, { encoding: "utf-8", recursive: true })
-      .find((f) => f.endsWith(".sqlite"))
+  const basePath = path.resolve(".wrangler")
+  const dbFile = fs
+    .readdirSync(basePath, { encoding: "utf-8", recursive: true })
+    .find((f) => f.endsWith(".sqlite"))
 
-    if (!dbFile) {
-      throw new Error(`.sqlite file not found in ${basePath}`)
-    }
-
-    return path.resolve(basePath, dbFile)
-  } catch (err) {
-    console.log(`Error ${err}`)
+  if (!dbFile) {
+    throw new Error(`.sqlite file not found in ${basePath}`)
   }
+
+  return path.resolve(basePath, dbFile)
 }
 
 const getCredentials = () => {

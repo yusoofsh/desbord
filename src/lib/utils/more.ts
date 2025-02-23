@@ -1,4 +1,4 @@
-import type { Revenue } from "@/lib/utils/definition"
+import type { Revenue } from "@/lib/utils/schema"
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {
@@ -27,9 +27,15 @@ export const generateYAxis = (revenue: Revenue[]) => {
   const yAxisLabels = []
   const highestRecord = Math.max(...revenue.map((month) => month.revenue))
   const topLabel = Math.ceil(highestRecord / 1000) * 1000
+  const step = Math.ceil(topLabel / 9) // 9 steps to create 10 labels
 
-  for (let i = topLabel; i >= 0; i -= 1000) {
-    yAxisLabels.push(`$${i / 1000}K`)
+  for (let i = topLabel; i >= 0; i -= step) {
+    yAxisLabels.push(`$${(i / 1000).toFixed(1)}K`)
+  }
+
+  // Ensure we have exactly 10 labels
+  while (yAxisLabels.length > 10) {
+    yAxisLabels.pop()
   }
 
   return { yAxisLabels, topLabel }

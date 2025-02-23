@@ -5,12 +5,16 @@ import { lusitana } from "@/lib/utils/fonts"
 import Image from "next/image"
 import { getCurrentSession } from "@/lib/utils/session"
 import { redirect } from "next/navigation"
+import { checkAndSeed } from "@/lib/utils/seed"
 
 export const runtime = "edge"
 
 export default async function RootPage() {
-  const { session } = await getCurrentSession()
+  const session = await getCurrentSession()
   if (session) redirect("/home")
+
+  // Check and seed database if needed
+  await checkAndSeed()
 
   return (
     <main className="flex min-h-screen flex-col p-6">

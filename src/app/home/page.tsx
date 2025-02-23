@@ -14,7 +14,7 @@ import { Suspense } from "react"
 export const runtime = "edge"
 
 export default async function HomePage() {
-  const { session } = await getCurrentSession()
+  const session = await getCurrentSession()
   if (!session) redirect("/auth?mode=signin")
 
   return (

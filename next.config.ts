@@ -6,6 +6,15 @@ import { setupDevPlatform } from "@cloudflare/next-on-pages/next-dev"
 // https://github.com/cloudflare/next-on-pages/blob/5712c57ea7/internal-packages/next-dev/README.md
 if (process.env.NODE_ENV === "development") setupDevPlatform()
 
-const nextConfig = {} satisfies NextConfig
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+      },
+    ],
+  },
+} satisfies NextConfig
 
 export default nextConfig

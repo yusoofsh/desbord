@@ -21,7 +21,7 @@ export async function middleware(request: NextRequest) {
 
   const originHeader = request.headers.get("Origin")
   const hostHeader = request.headers.get("Host")
-  if (originHeader === null || hostHeader === null) {
+  if (!originHeader || !hostHeader) {
     return new NextResponse(null, {
       status: 403,
     })

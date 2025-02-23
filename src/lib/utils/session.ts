@@ -7,14 +7,13 @@ import { cookies } from "next/headers"
 import { eq, sql } from "drizzle-orm"
 import db from "@/lib/utils/db"
 import {
-  passkeyCredentials,
-  securityKeyCredentials,
+  passkeys,
+  securityKeys,
   sessions,
-  totpCredentials,
+  totps,
   users,
 } from "@/lib/utils/schema"
 import { cache } from "react"
-import type { Session, User, SessionFlags } from "@/lib/utils/definition"
 
 export async function validateSessionToken(token: string) {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)))
@@ -28,73 +27,41 @@ export async function validateSessionToken(token: string) {
       email: users.email,
       username: users.username,
       emailVerified: users.emailVerified,
-      hasTotp: sql`CASE WHEN ${totpCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
-      hasPasskey: sql`CASE WHEN ${passkeyCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
-      hasSecurityKey: sql`CASE WHEN ${securityKeyCredentials.id} IS NOT NULL THEN 1 ELSE 0 END`,
+      registered2FA: sql`CASE WHEN ${totps.id} IS NOT NULL OR ${passkeys.id} IS NOT NULL OR ${securityKeys.id} IS NOT NULL THEN 1 ELSE 0 END`,
     })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
-    .leftJoin(totpCredentials, eq(sessions.userId, totpCredentials.userId))
-    .leftJoin(passkeyCredentials, eq(users.id, passkeyCredentials.userId))
-    .leftJoin(
-      securityKeyCredentials,
-      eq(users.id, securityKeyCredentials.userId),
-    )
+    .leftJoin(totps, eq(sessions.userId, totps.userId))
+    .leftJoin(passkeys, eq(users.id, passkeys.userId))
+    .leftJoin(securityKeys, eq(users.id, securityKeys.userId))
     .where(eq(sessions.id, sessionId))
     .get()
 
-  if (!result) {
-    return { session: null, user: null }
-  }
+  if (!result) return null
 
-  const session: Session = {
-    id: result.sessionId,
-    userId: result.userId,
-    expiresAt: new Date(result.expiresAt * 1000),
-    twoFactorVerified: Boolean(result.twoFactorVerified),
-  }
+  let expiresAt = new Date(result.expiresAt * 1000)
 
-  const user: User = {
-    id: result.userId,
-    email: result.email,
-    username: result.username,
-    emailVerified: Boolean(result.emailVerified),
-    registeredTOTP: Boolean(result.hasTotp),
-    registeredPasskey: Boolean(result.hasPasskey),
-    registeredSecurityKey: Boolean(result.hasSecurityKey),
-    registered2FA: false,
-  }
-
-  if (
-    user.registeredPasskey ||
-    user.registeredSecurityKey ||
-    user.registeredTOTP
-  ) {
-    user.registered2FA = true
-  }
-
-  if (Date.now() >= session.expiresAt.getTime()) {
+  if (Date.now() >= expiresAt.getTime()) {
     await db.delete(sessions).where(eq(sessions.id, sessionId)).run()
-    return { session: null, user: null }
+    return null
   }
 
-  if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-    session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
+  if (Date.now() >= expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
+    expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30)
     await db
       .update(sessions)
-      .set({ expiresAt: Math.floor(session.expiresAt.getTime() / 1000) })
+      .set({ expiresAt: Math.floor(expiresAt.getTime() / 1000) })
       .where(eq(sessions.id, sessionId))
       .run()
   }
 
-  return { session, user }
+  return { ...result, expiresAt }
 }
 
 export const getCurrentSession = cache(async () => {
   const token = (await cookies()).get("session")?.value ?? null
-  if (token === null) {
-    return { session: null, user: null }
-  }
+
+  if (!token) return null
 
   return validateSessionToken(token)
 })
@@ -137,13 +104,13 @@ export function generateSessionToken() {
 export async function createSession(
   token: string,
   userId: number,
-  flags: SessionFlags,
+  flags: Record<string, boolean>,
 ) {
-  const session: Session = {
+  const session = {
     userId,
     id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    twoFactorVerified: flags.twoFactorVerified,
+    twoFactorVerified: flags.twoFactorVerified ?? false,
   }
 
   await db
@@ -152,7 +119,7 @@ export async function createSession(
       id: session.id,
       userId: session.userId,
       expiresAt: Math.floor(session.expiresAt.getTime() / 1000),
-      twoFactorVerified: Number(session.twoFactorVerified),
+      twoFactorVerified: session.twoFactorVerified,
     })
     .run()
 
@@ -162,7 +129,7 @@ export async function createSession(
 export async function setSessionAs2FAVerified(sessionId: string) {
   await db
     .update(sessions)
-    .set({ twoFactorVerified: 1 })
+    .set({ twoFactorVerified: true })
     .where(eq(sessions.id, sessionId))
     .run()
 }

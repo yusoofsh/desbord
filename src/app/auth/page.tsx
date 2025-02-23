@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 export const runtime = "edge"
 
 export default async function AuthPage() {
-  const { session } = await getCurrentSession()
+  const session = await getCurrentSession()
   if (session) return redirect("/home")
 
   return (
