@@ -162,8 +162,8 @@ async function seed() {
     await db.delete(invoices)
     await db.delete(customers)
     await db.delete(revenues)
-    await db.delete(metadata)
     await db.delete(users)
+    await db.delete(metadata)
 
     // Create default user
     console.log("👤 Creating default user...")
@@ -214,7 +214,7 @@ export async function checkAndSeed() {
     .where(eq(metadata.key, "seeded"))
     .get()
 
-  if (!result) return
+  if (result) return
 
   // Run seeding
   const success = await seed()

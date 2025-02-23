@@ -2,12 +2,13 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Next.js Debug",
       "type": "node",
+      "name": "Next.js Debug",
       "request": "launch",
-      "program": "${workspaceFolder}/node_modules/.bin/next",
       "runtimeArgs": ["--inspect"],
       "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/.bin/next",
+      "internalConsoleOptions": "openOnSessionStart",
       "serverReadyAction": {
         "killOnServerStop": true,
         "pattern": "- Local:.+(https?://.+)",

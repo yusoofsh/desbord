@@ -6,8 +6,7 @@
     "dev": "NODE_OPTIONS='--inspect' next dev --turbopack",
     "db:generate": "drizzle-kit generate",
     "db:studio": "drizzle-kit studio",
-    "db:migrate:local": "wrangler d1 migrations apply desbord --local",
-    "db:migrate:remote": "wrangler d1 migrations apply desbord --remote",
+    "db:migrate": "wrangler d1 migrations apply desbord --local && wrangler d1 migrations apply desbord --remote",
     "prepare": "husky"
   },
   "dependencies": {
