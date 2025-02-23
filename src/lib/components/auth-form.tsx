@@ -11,12 +11,15 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
-import { useSearchParams } from "next/navigation"
+import { redirect, useSearchParams } from "next/navigation"
 import { useActionState } from "react"
 
 export default function AuthForm() {
   const searchParams = useSearchParams()
-  const mode = searchParams.get("mode") === "signin" ? "signin" : "signup"
+  const mode = searchParams.get("mode")
+  if (!mode) {
+    redirect("/auth?mode=signup")
+  }
 
   const [state, action, isPending] = useActionState(
     mode === "signin" ? signinAction : signupAction,
@@ -25,7 +28,7 @@ export default function AuthForm() {
 
   return (
     <form action={action} className="space-y-3">
-      <div className="flex-1 rounded-lg bg-gray-50 px-6 pb-4 pt-8">
+      <div className="flex-1 rounded-lg bg-gray-50 px-6 pt-8 pb-4">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
           {mode === "signin"
             ? "Please sign in to continue."
@@ -58,7 +61,7 @@ export default function AuthForm() {
           {mode === "signup" && (
             <div>
               <label
-                className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+                className="mt-5 mb-3 block text-xs font-medium text-gray-900"
                 htmlFor="username"
               >
                 Username
@@ -72,13 +75,13 @@ export default function AuthForm() {
                   placeholder="Enter your username"
                   required
                 />
-                <UserIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                <UserIcon className="pointer-events-none absolute top-1/2 left-3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
           )}
           <div className="mt-4">
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mt-5 mb-3 block text-xs font-medium text-gray-900"
               htmlFor="email"
             >
               Email
@@ -92,12 +95,12 @@ export default function AuthForm() {
                 placeholder="Enter your email address"
                 required
               />
-              <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <AtSymbolIcon className="pointer-events-none absolute top-1/2 left-3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
           <div className="mt-4">
             <label
-              className="mb-3 mt-5 block text-xs font-medium text-gray-900"
+              className="mt-5 mb-3 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
               Password
@@ -112,7 +115,7 @@ export default function AuthForm() {
                 minLength={6}
                 required
               />
-              <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <KeyIcon className="pointer-events-none absolute top-1/2 left-3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
