@@ -170,8 +170,8 @@ async function seed() {
     await createUser("yusoofsh", "me@yusoofsh.id", "c75e0daf")
 
     // Generate data
-    const customersData = generateCustomers(100)
-    const invoicesData = generateInvoices(customersData, 500)
+    const customersData = generateCustomers(12)
+    const invoicesData = generateInvoices(customersData, 24)
     const revenuesData = generateRevenues()
 
     // Insert customers sequentially
