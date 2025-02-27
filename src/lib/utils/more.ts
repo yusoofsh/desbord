@@ -1,4 +1,4 @@
-import type { Revenue } from "@/lib/utils/schema"
+import type { Revenue } from "@/lib/utils/types"
 
 export const formatCurrency = (amount: number) => {
   return (amount / 100).toLocaleString("en-US", {

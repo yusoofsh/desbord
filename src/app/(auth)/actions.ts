@@ -21,7 +21,7 @@ import {
 } from "@/lib/utils/user"
 import { redirect } from "next/navigation"
 
-export async function signinAction(
+export async function signInAction(
   _prevState: string | undefined,
   formData: FormData,
 ) {
@@ -56,7 +56,7 @@ export async function signinAction(
   return redirect("/home")
 }
 
-export async function signupAction(
+export async function signUpAction(
   _prevState: string | undefined,
   formData: FormData,
 ) {
@@ -106,12 +106,12 @@ export async function signupAction(
   return redirect("/home")
 }
 
-export async function signoutAction() {
+export async function signOutAction() {
   const session = await getCurrentSession()
   if (!session) return "Not authenticated"
 
   await invalidateSession(session.sessionId)
   await deleteSessionTokenCookie()
 
-  return redirect("/auth?mode=signin")
+  return redirect("/sign-in")
 }

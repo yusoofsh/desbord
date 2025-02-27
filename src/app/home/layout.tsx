@@ -1,10 +1,16 @@
-import SideNav from "@/lib/components/side-nav"
+import SideNav from "@/lib/components/home/side-nav"
+import { getCurrentSession } from "@/lib/utils/session"
+import { redirect } from "next/navigation"
+import type { ReactNode } from "react"
 
-export default function HomeLayout({
+export default async function HomeLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
+  const session = await getCurrentSession()
+  if (!session) return redirect("/sign-in")
+
   return (
     <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
       <div className="w-full flex-none md:w-64">

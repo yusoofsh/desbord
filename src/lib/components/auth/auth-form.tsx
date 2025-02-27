@@ -1,6 +1,6 @@
 "use client"
 
-import { signinAction, signupAction } from "@/app/auth/actions"
+import { signInAction, signUpAction } from "@/app/(auth)/actions"
 import { Button } from "@/lib/components/button"
 import { lusitana } from "@/lib/utils/fonts"
 import { ArrowRightIcon } from "@heroicons/react/20/solid"
@@ -11,18 +11,15 @@ import {
   UserIcon,
 } from "@heroicons/react/24/outline"
 import Link from "next/link"
-import { redirect, useSearchParams } from "next/navigation"
 import { useActionState } from "react"
 
-export default function AuthForm() {
-  const searchParams = useSearchParams()
-  const mode = searchParams.get("mode")
-  if (!mode) {
-    redirect("/auth?mode=signup")
-  }
+type AuthFormProps = {
+  mode: "sign-in" | "sign-up"
+}
 
+export default function AuthForm({ mode }: AuthFormProps) {
   const [state, action, isPending] = useActionState(
-    mode === "signin" ? signinAction : signupAction,
+    mode === "sign-in" ? signInAction : signUpAction,
     undefined,
   )
 
@@ -30,35 +27,29 @@ export default function AuthForm() {
     <form action={action} className="space-y-3">
       <div className="flex-1 rounded-lg bg-gray-50 px-6 pt-8 pb-4">
         <h1 className={`${lusitana.className} mb-3 text-2xl`}>
-          {mode === "signin"
+          {mode === "sign-in"
             ? "Please sign in to continue."
             : "Please sign up to continue."}
         </h1>
         <p className="mt-2 text-sm text-gray-500">
-          {mode === "signin" ? (
+          {mode === "sign-in" ? (
             <>
               Don&#39;t have an account?{" "}
-              <Link
-                href="/auth?mode=signup"
-                className="text-blue-500 hover:underline"
-              >
+              <Link href="/sign-up" className="text-blue-500 hover:underline">
                 Sign up here
               </Link>
             </>
           ) : (
             <>
               Already have an account?{" "}
-              <Link
-                href="/auth?mode=signin"
-                className="text-blue-500 hover:underline"
-              >
+              <Link href="/sign-in" className="text-blue-500 hover:underline">
                 Sign in here
               </Link>
             </>
           )}
         </p>
         <div className="w-full">
-          {mode === "signup" && (
+          {mode === "sign-up" && (
             <div>
               <label
                 className="mt-5 mb-3 block text-xs font-medium text-gray-900"
@@ -112,7 +103,7 @@ export default function AuthForm() {
                 type="password"
                 name="password"
                 placeholder="Enter password"
-                minLength={6}
+                minLength={mode === "sign-up" ? 6 : undefined}
                 required
               />
               <KeyIcon className="pointer-events-none absolute top-1/2 left-3 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
@@ -120,7 +111,7 @@ export default function AuthForm() {
           </div>
         </div>
         <Button className="mt-4 w-full" aria-disabled={isPending}>
-          {mode === "signin" ? "Sign in" : "Sign up"}{" "}
+          {mode === "sign-in" ? "Sign In" : "Sign Up"}{" "}
           <ArrowRightIcon className="ml-auto h-5 w-5 text-gray-50" />
         </Button>
         <div

@@ -1,11 +1,13 @@
-import AuthForm from "@/lib/components/auth-form"
 import Logo from "@/lib/components/logo"
 import { getCurrentSession } from "@/lib/utils/session"
 import { redirect } from "next/navigation"
+import { ReactNode } from "react"
 
-export const runtime = "edge"
-
-export default async function AuthPage() {
+export default async function AuthLayout({
+  children,
+}: {
+  children: ReactNode
+}) {
   const session = await getCurrentSession()
   if (session) return redirect("/home")
 
@@ -17,7 +19,7 @@ export default async function AuthPage() {
             <Logo />
           </div>
         </div>
-        <AuthForm />
+        {children}
       </div>
     </main>
   )

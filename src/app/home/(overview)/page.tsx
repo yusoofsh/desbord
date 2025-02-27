@@ -1,22 +1,17 @@
-import CardWrapper from "@/lib/components/cards"
+import CardWrapper from "@/lib/components/home/cards"
+import LatestInvoices from "@/lib/components/home/latest-invoices"
+import RevenueChart from "@/lib/components/home/revenue-chart"
 import {
   CardsSkeleton,
   RevenueChartSkeleton,
   LatestInvoicesSkeleton,
-} from "@/lib/components/home-skeleton"
-import LatestInvoices from "@/lib/components/latest-invoices"
-import RevenueChart from "@/lib/components/revenue-chart"
+} from "@/lib/components/home/skeletons"
 import { lusitana } from "@/lib/utils/fonts"
-import { getCurrentSession } from "@/lib/utils/session"
-import { redirect } from "next/navigation"
 import { Suspense } from "react"
 
 export const runtime = "edge"
 
 export default async function HomePage() {
-  const session = await getCurrentSession()
-  if (!session) redirect("/auth?mode=signin")
-
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>

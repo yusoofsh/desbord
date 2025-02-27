@@ -17,9 +17,10 @@
     "@oslojs/encoding": "^1.1.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.38.4",
-    "next": "^15.1.7",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "next": "15.2.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "use-debounce": "^10.0.4"
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.8",
@@ -29,10 +30,9 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/postcss": "^4.0.8",
     "@types/node": "^20.17.19",
-    "@vercel/style-guide": "^6.0.0",
     "drizzle-kit": "^0.30.4",
     "eslint": "^9.21.0",
-    "eslint-config-next": "^15.1.7",
+    "eslint-config-next": "15.2.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-next-on-pages": "^1.13.8",
     "husky": "^9.1.7",

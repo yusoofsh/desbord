@@ -1,8 +1,8 @@
 import Link from "next/link"
 import { PowerIcon } from "@heroicons/react/24/outline"
-import NavLinks from "@/lib/components/nav-links"
-import AcmeLogo from "@/lib/components/acme-logo"
-import { signoutAction } from "@/app/auth/actions"
+import NavLinks from "@/lib/components/home/nav-links"
+import { signOutAction } from "@/app/(auth)/actions"
+import Logo from "@/lib/components/logo"
 
 export default function SideNav() {
   return (
@@ -12,7 +12,7 @@ export default function SideNav() {
         href="/"
       >
         <div className="w-32 text-white md:w-40">
-          <AcmeLogo />
+          <Logo />
         </div>
       </Link>
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-y-2 md:space-x-0">
@@ -21,7 +21,7 @@ export default function SideNav() {
         <form
           action={async () => {
             "use server"
-            await signoutAction()
+            await signOutAction()
           }}
         >
           <button className="flex h-[48px] w-full grow cursor-pointer items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">

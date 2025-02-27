@@ -94,13 +94,12 @@ export const revenues = sqliteTable("revenues", {
   month: text("month").notNull(),
   revenue: integer("revenue").notNull(),
 })
-export type Revenue = typeof revenues.$inferSelect
 
 export const customers = sqliteTable("customers", {
   id: text("id").primaryKey().notNull(),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  imageUrl: text("image_url"),
+  imageUrl: text("image_url").notNull(),
 })
 
 export const invoices = sqliteTable("invoices", {
