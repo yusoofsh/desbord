@@ -49,12 +49,8 @@ export async function signinAction(
     return "Invalid password"
   }
 
-  const sessionFlags = {
-    twoFactorVerified: false,
-  }
-
   const sessionToken = generateSessionToken()
-  const session = await createSession(sessionToken, user.id, sessionFlags)
+  const session = await createSession(sessionToken, user.id)
   await setSessionTokenCookie(sessionToken, session.expiresAt)
 
   return redirect("/home")
@@ -99,17 +95,13 @@ export async function signupAction(
   }
 
   const user = await createUser(username, email, password)
-  if (!user) {
+  if (!user.id) {
     return "Something went wrong"
   }
 
-  const sessionFlags = {
-    twoFactorVerified: false,
-  }
-
   const sessionToken = generateSessionToken()
-  const session = await createSession(sessionToken, user.id, sessionFlags)
-  setSessionTokenCookie(sessionToken, session.expiresAt)
+  const session = await createSession(sessionToken, user.id)
+  await setSessionTokenCookie(sessionToken, session.expiresAt)
 
   return redirect("/home")
 }

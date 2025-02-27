@@ -4,7 +4,7 @@ import {
 } from "@oslojs/encoding"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { cookies } from "next/headers"
-import { eq, sql } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import db from "@/lib/utils/db"
 import {
   passkeys,
@@ -27,7 +27,6 @@ export async function validateSessionToken(token: string) {
       email: users.email,
       username: users.username,
       emailVerified: users.emailVerified,
-      registered2FA: sql`CASE WHEN ${totps.id} IS NOT NULL OR ${passkeys.id} IS NOT NULL OR ${securityKeys.id} IS NOT NULL THEN 1 ELSE 0 END`,
     })
     .from(sessions)
     .innerJoin(users, eq(sessions.userId, users.id))
@@ -101,16 +100,11 @@ export function generateSessionToken() {
   return token
 }
 
-export async function createSession(
-  token: string,
-  userId: number,
-  flags: Record<string, boolean>,
-) {
+export async function createSession(token: string, userId: number) {
   const session = {
     userId,
     id: encodeHexLowerCase(sha256(new TextEncoder().encode(token))),
     expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-    twoFactorVerified: flags.twoFactorVerified ?? false,
   }
 
   await db
@@ -119,7 +113,6 @@ export async function createSession(
       id: session.id,
       userId: session.userId,
       expiresAt: Math.floor(session.expiresAt.getTime() / 1000),
-      twoFactorVerified: session.twoFactorVerified,
     })
     .run()
 

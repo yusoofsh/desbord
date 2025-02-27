@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm"
+import { and, eq } from "drizzle-orm"
 import { passkeys, securityKeys, totps, users } from "@/lib/utils/schema"
 import db from "@/lib/utils/db"
 import { hashPassword } from "@/lib/utils/password"
@@ -18,7 +18,7 @@ export async function createUser(
   const passwordHash = await hashPassword(password)
   const recoveryCode = generateRandomRecoveryCode()
 
-  const result = await db
+  return db
     .insert(users)
     .values({
       email,
@@ -28,19 +28,6 @@ export async function createUser(
     })
     .returning({ id: users.id })
     .get()
-
-  const user = {
-    ...result,
-    username,
-    email,
-    emailVerified: false,
-    registeredTOTP: false,
-    registeredPasskey: false,
-    registeredSecurityKey: false,
-    registered2FA: false,
-  }
-
-  return user
 }
 
 export async function updateUserPassword(userId: number, password: string) {
@@ -111,7 +98,6 @@ export async function getUserFromEmail(email: string) {
       email: users.email,
       username: users.username,
       emailVerified: users.emailVerified,
-      registered2FA: sql`CASE WHEN ${totps.id} IS NOT NULL OR ${passkeys.id} IS NOT NULL OR ${securityKeys.id} IS NOT NULL THEN 1 ELSE 0 END`,
     })
     .from(users)
     .leftJoin(totps, eq(users.id, totps.userId))
